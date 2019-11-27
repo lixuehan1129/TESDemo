@@ -177,7 +177,7 @@ void T_e_s::HK()
 {
 
 
-	m_CamDriver[0].InitHKNetSDK();
+	m_CamDriver[0].InitHKNetSDK();//
 	m_CamDriver[0].SetScaleFactor(0.5f);
 	m_CamDriver[0].InitCamera("192.168.1.101", "admin", "Zz123456");
 	m_CamDriver[1].InitCamera("192.168.1.109", "admin", "Zz123456");
