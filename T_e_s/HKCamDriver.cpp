@@ -41,6 +41,7 @@ int HKCamDriver::ReleaseCamera(void)
 {
 	InitHKNetSDK();
 	printf("stop, %ld\n", lUserID);
+
 	if (!NET_DVR_StopRealPlay(lRealPlayHandle)) {
 		printf("NET_DVR_StopRealPlay error! Error number: %d\n", NET_DVR_GetLastError());
 		return 0;
