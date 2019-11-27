@@ -7,6 +7,8 @@
 #include "ui_PersonBody.h"
 #pragma execution_character_set("utf-8") 
 
+
+//人员数据
 typedef struct {
 	//item传入数据
 	QString personName;
