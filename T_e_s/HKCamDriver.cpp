@@ -46,6 +46,7 @@ int HKCamDriver::ReleaseCamera(void)
 		printf("NET_DVR_StopRealPlay error! Error number: %d\n", NET_DVR_GetLastError());
 		return 0;
 	}
+
 	NET_DVR_Logout(lUserID);
 	NET_DVR_Cleanup();
 	return 1;

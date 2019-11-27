@@ -187,11 +187,6 @@ void T_e_s::HK()
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 
-	
-
-		
-		
-	
 
 }
 
