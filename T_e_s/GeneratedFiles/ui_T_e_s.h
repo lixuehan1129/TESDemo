@@ -370,7 +370,7 @@ public:
         tab_person->setStyleSheet(QString::fromUtf8("background-color:transparent"));
         listWidget_personBody = new QListWidget(tab_person);
         listWidget_personBody->setObjectName(QString::fromUtf8("listWidget_personBody"));
-        listWidget_personBody->setGeometry(QRect(0, 0, 1170, 600));
+        listWidget_personBody->setGeometry(QRect(0, 0, 1170, 608));
         listWidget_personBody->setStyleSheet(QString::fromUtf8("border-color: transparent;"));
         listWidget_personBody->setGridSize(QSize(0, 120));
         tabWidget->addTab(tab_person, QString());
@@ -499,7 +499,7 @@ public:
 
         retranslateUi(T_e_sClass);
 
-        stackedWidget->setCurrentIndex(3);
+        stackedWidget->setCurrentIndex(1);
         tabWidget->setCurrentIndex(0);
 
 
