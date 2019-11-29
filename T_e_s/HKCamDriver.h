@@ -9,7 +9,7 @@
 #include <opencv2\highgui\highgui.hpp>
 #include <opencv2\imgproc\imgproc.hpp>  
 
-#include "qimage.h"
+#include "QImage"
 
 
 #define MaxCameraNum 4

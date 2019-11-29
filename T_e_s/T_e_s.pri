@@ -7,11 +7,20 @@
 message("You are running qmake on a generated .pro file. This may not work!")
 
 
-HEADERS += ./PersonBody.h \
-    ./T_e_s.h
-SOURCES += ./main.cpp \
+HEADERS += ./HKCamDriver.h \
+    ./HK_camera.h \
+    ./PersonBody.h \
+    ./T_e_s.h \
+    ./ECG.h \
+    ./VideoThread.h
+SOURCES += ./ECG.cpp \
+    ./HKCamDriver.cpp \
+    ./HK_camera.cpp \
+    ./main.cpp \
     ./PersonBody.cpp \
-    ./T_e_s.cpp
+    ./T_e_s.cpp \
+    ./VideoThread.cpp
 FORMS += ./PersonBody.ui \
+    ./ECG.ui \
     ./T_e_s.ui
 RESOURCES += T_e_s.qrc

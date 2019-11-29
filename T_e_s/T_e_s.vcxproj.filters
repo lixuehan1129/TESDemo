@@ -64,6 +64,15 @@
     <ClCompile Include="HKCamDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ECG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DBHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="T_e_s.h">
@@ -72,9 +81,21 @@
     <QtMoc Include="VideoThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ECG.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddCamera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="T_e_s.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ECG.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AddCamera.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -99,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HKCamDriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

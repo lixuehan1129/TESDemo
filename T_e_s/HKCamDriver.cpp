@@ -33,13 +33,13 @@ HKCamDriver::HKCamDriver()
 
 HKCamDriver::~HKCamDriver() {
 	
-	ReleaseCamera();
+//	ReleaseCamera();
 	ReleaseImage();
 }
 
 int HKCamDriver::ReleaseCamera(void)
 {
-	InitHKNetSDK();
+	NET_DVR_Init();
 	printf("stop, %ld\n", lUserID);
 
 	if (!NET_DVR_StopRealPlay(lRealPlayHandle)) {

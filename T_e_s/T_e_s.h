@@ -10,10 +10,13 @@
 #include <PersonBody.h>
 #include "HK_camera.h"
 #include <HKCamDriver.h>
-
+#include <AddCamera.h>
+#include <ECG.h>
 #include <iostream>
 
 using namespace std;
+
+#define MAX_ECG 4
 
 
 class T_e_s : public QMainWindow
@@ -25,11 +28,12 @@ public:
 	~T_e_s();
 	void initStatus();
 	QTimer *myTimer;
-
-	QMap<QListWidgetItem*, QListWidgetItem*> groupMap;   // 组容器 - key:项 value:组  
 	void addListPerson();
-	
 
+	QString color1 = "#4182C3";
+	QString color2 = "#17abe3";
+	QString color3 = "#2a79bd";
+	
 public slots:
     void GetDateTime();//动态显示时间
 
@@ -44,14 +48,14 @@ private slots:
 	void on_pushButton_device_clicked();
 	void on_pushButton_data_clicked();
 	void on_pushButton_reg_clicked();
+	void on_pushButton_addDevice_clicked();
+	void on_pushButton_addEcg_clicked();
 	void on_pushButton_begin_clicked();
 	void mouseReleaseEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void getFrame1();
 	void getFrame2();
-	
-
 
 private:
 	Ui::T_e_sClass ui;
@@ -61,19 +65,17 @@ private:
 	void paintEvent(QPaintEvent *event);
 	void styleSheet();
 	void buttonChange(int i);
-	QString color1 = "#4182C3";
-	QString color2 = "#17abe3";
-	QString color3 = "#2a79bd";
 	QTimer* timer;
 
 	cv::VideoCapture cap1,cap2;
-
-
 	QImage image;
 
 	void HK();
 	HKCamDriver m_CamDriver[2];
 	cv::Mat video[2];
+
+	ECG *ecg[MAX_ECG];
+	void EcgSet(int item);
 
 	
 };

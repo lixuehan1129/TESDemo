@@ -8,7 +8,6 @@
 //#include <vld.h>
 
 
-
 #pragma execution_character_set("utf-8") 
 
 /*
@@ -36,8 +35,8 @@ public:
 
 				if (tab->state & QStyle::State_Selected) {
 					painter->save();
-					painter->setPen("#4182C3");
-					painter->setBrush(QBrush(QColor("#4182C3")
+					painter->setPen("#87CEEB");
+					painter->setBrush(QBrush(QColor("#87CEEB")
 					));
 					painter->drawRect(allRect.adjusted(6, 6, -6, -6));
 					painter->restore();
@@ -64,8 +63,6 @@ public:
 		}
 	}
 };
-
-
 
 
 T_e_s::T_e_s(QWidget *parent)
@@ -106,6 +103,8 @@ void T_e_s::initStatus()
 	//第四页
 	//获取视频
 	HK();
+	EcgSet(0);
+	EcgSet(1);
 
 
 	//底部
@@ -124,19 +123,23 @@ void T_e_s::initStatus()
 //快速开始按钮时间
 void T_e_s::on_pushButton_phy_clicked()
 {
-
+	setItemColor(3);
+	ui.stackedWidget->setCurrentIndex(3);	
 }
 void T_e_s::on_pushButton_res_clicked()
 {
-
+	setItemColor(3);
+	ui.stackedWidget->setCurrentIndex(3);
 }
 void T_e_s::on_pushButton_device_clicked()
 {
-
+	setItemColor(2);
+	ui.stackedWidget->setCurrentIndex(2);
 }
 void T_e_s::on_pushButton_data_clicked()
 {
-
+	setItemColor(1);
+	ui.stackedWidget->setCurrentIndex(1);
 }
 void T_e_s::on_pushButton_reg_clicked()
 {
@@ -156,6 +159,18 @@ void T_e_s::on_pushButton_set_clicked()
 	ui.stackedWidget->setCurrentIndex(5);
 }
 
+//第三页
+void T_e_s::on_pushButton_addDevice_clicked() {
+	AddCamera *add = new AddCamera();
+	add->setWindowModality(Qt::WindowModal);
+	add->setWindowTitle(QObject::tr("输入设备信息"));
+	add->show();
+}
+
+void T_e_s::on_pushButton_addEcg_clicked() {
+
+}
+
 //开始
 void T_e_s::on_pushButton_begin_clicked()
 {
@@ -164,19 +179,25 @@ void T_e_s::on_pushButton_begin_clicked()
 		ui.pushButton_begin->setText("停止");
 		buttonChange(2);
 
+		ecg[0]->initData();
+		ecg[1]->initData();
+
 	
 	}
 	else
 	{
 		ui.pushButton_begin->setText("开始");
 		buttonChange(1);
+
+		ecg[0]->stopShow();
+		ecg[1]->stopShow();
 	}
 }
 
+
+//第四页评估
 void T_e_s::HK()
 {
-
-
 	m_CamDriver[0].InitHKNetSDK();//
 	m_CamDriver[0].SetScaleFactor(0.5f);
 	m_CamDriver[0].InitCamera("192.168.1.101", "admin", "Zz123456");
@@ -186,8 +207,6 @@ void T_e_s::HK()
 	HKtimer->start(20);
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
-
-
 }
 
 //获取视频
@@ -208,8 +227,6 @@ void T_e_s::getFrame1()
 			ui.label_video1->show();
 		}
 	}
-	
-
 }
 
 void T_e_s::getFrame2()
@@ -228,6 +245,18 @@ void T_e_s::getFrame2()
 			ui.label_video2->show();
 		}
 	}
+}
+
+//获取心率,初始化，还没有实质数据
+void T_e_s::EcgSet(int item)
+{
+	ecg[item] = new ECG(this);
+	QListWidgetItem *newItem = new QListWidgetItem(ui.listWidget_xinlv);
+	newItem->setSizeHint(ecg[item]->size());
+	//newItem->setText("dsadasda");
+	ui.listWidget_xinlv->addItem(newItem);
+	ui.listWidget_xinlv->setItemWidget(newItem, ecg[item]);
+
 }
 
 
@@ -252,8 +281,6 @@ void T_e_s::addListPerson() {
 
 	ui.listWidget_personBody->setItemWidget(newItem,personBody);
 
-	
-	
 
 }
 
@@ -280,7 +307,7 @@ void T_e_s::on_pushButton_close_clicked()
 void T_e_s::GetDateTime()
 {
 	QDateTime dateTime(QDateTime::currentDateTime());
-	QString qStr = dateTime.toString("yyyy年MM月dd日 hh:mm:ss  ddd");
+	QString qStr = dateTime.toString("yyyy年MM月dd日 hh:mm:ss  dddd");
 	ui.label_detail_time->setText(qStr);
 }
 
@@ -405,12 +432,10 @@ void T_e_s::styleSheet()
 		"QListWidget::Item:hover{background:transparent; }"
 		"QListWidget::item:selected{background:transparent; }"
 		"QListWidget::item:selected:!active{border-width:0px; background:transparent; }"
+		"QScrollBar{ width : 0; height : 0; }"
 	);
 
-
-
-	//第四页 评估
-	ui.label_4_title->setStyleSheet(QString("color: %1").arg(color1));
+	//第三页
 	QStringList qssbtn;//按钮
 	qssbtn.append(QString(
 		"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid #AAAAAA;background:#e1e1e1;color:#777777} "
@@ -418,6 +443,54 @@ void T_e_s::styleSheet()
 		"QPushButton:hover {border-style:none;padding:2px;border-radius:5px;border:2px solid %2;background:%2;color:#FFFFFF}"
 		"QPushButton:pressed{border-style:none;padding:2px;border-radius:5px;border:2px solid %3;background:%3;color:#FFFFFF}"
 	).arg(color1).arg(color2).arg(color3));
+
+
+	ui.tabWidget_2->setTabPosition(QTabWidget::West);
+	ui.tabWidget_2->tabBar()->setStyle(new CustomTabStyle);
+	ui.tabWidget_2->setStyleSheet("QTabWidget::tab-bar{top:0px; }"
+		"QTabWidget::pane{ \
+            border-left: 1px solid #eeeeee;\
+        }");
+	ui.tabWidget_2->setCurrentIndex(0);
+
+	ui.pushButton_addDevice->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addDevice_up->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addDevice_down->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addDevice_jump->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addEcg->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addEcg_up->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addEcg_down->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_addEcg_jump->setStyleSheet(qssbtn.join(""));
+
+	ui.tableWidget_addDevice->setColumnCount(6);
+	ui.tableWidget_addDevice->setRowCount(14);
+
+	QStringList header;
+	header << "编号" << tr("设备名") << "IP地址" << "端口号" << "用户名" << "密码";
+	ui.tableWidget_addDevice->setHorizontalHeaderLabels(header);
+	ui.tableWidget_addDevice->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.tableWidget_addDevice->setSelectionMode(QAbstractItemView::NoSelection);
+	ui.tableWidget_addDevice->setAlternatingRowColors(true);
+	ui.tableWidget_addDevice->setStyleSheet("alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
+	ui.tableWidget_addDevice->verticalHeader()->setHidden(true);
+	ui.tableWidget_addDevice->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+
+	ui.tableWidget_addEcg->setColumnCount(6);
+	ui.tableWidget_addEcg->setRowCount(14);
+	ui.tableWidget_addEcg->setHorizontalHeaderLabels(header);
+	ui.tableWidget_addEcg->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.tableWidget_addEcg->setSelectionMode(QAbstractItemView::NoSelection);
+	ui.tableWidget_addEcg->setAlternatingRowColors(true);
+	ui.tableWidget_addEcg->setStyleSheet("alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
+	ui.tableWidget_addEcg->verticalHeader()->setHidden(true);
+	ui.tableWidget_addEcg->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+	ui.spinBox_addDevice->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 1px;}");
+	ui.spinBox_addEcg->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 1px;}");
+
+	//第四页 评估
+	ui.label_4_title->setStyleSheet(QString("color: %1").arg(color1));
 
 	QStringList qss1;//选择
 	qss1.append(QString(("QComboBox{"          //选择框  
@@ -427,7 +500,7 @@ void T_e_s::styleSheet()
 		" min-width: 4em; "
 		"}"
 		"QComboBox QAbstractItemView::item {min-height: 30px;}" //下拉选项高度
-		"QComboBox::down-arrow{border-image:url(:/FEDE/Resources/arrow_down_gray.png);}" //下拉箭头
+		"QComboBox::down-arrow{border-image:url(./Resources/arrow_down_gray.png);}" //下拉箭头
 		"QComboBox::drop-down {"
 		"subcontrol-origin: padding;"
 		" subcontrol-position: top right;"
@@ -453,10 +526,11 @@ void T_e_s::styleSheet()
 	ui.label_video1->setStyleSheet(QString::fromUtf8("QFrame{border-radius: 5px;border: 2px solid %1; padding:2px;}").arg("#999999"));
 	ui.label_video2->setStyleSheet(QString::fromUtf8("QFrame{border-radius: 5px;border: 2px solid %1; padding:2px;}").arg("#999999"));
 
-	ui.listWidget_xinlv->setStyleSheet("QListWidget{border-radius: 5px;border: 2px solid #999999; }"
-		"QListWidget::Item:hover{background:transparent; }"
-		"QListWidget::item:selected{background:transparent; }"
-		"QListWidget::item:selected:!active{border-width:0px; background:transparent; }"
+	ui.listWidget_xinlv->setStyleSheet("QListWidget{border-radius: 5px;border: 2px solid #999999; padding:2px }"
+		"QScrollBar{ width : 0; height:0; }"
+	//	"QListWidget::Item:hover{background:transparent; }"
+	//	"QListWidget::item:selected{background:transparent; }"
+	//	"QListWidget::item:selected:!active{border-width:0px; background:transparent; }"
 	);
 
 	

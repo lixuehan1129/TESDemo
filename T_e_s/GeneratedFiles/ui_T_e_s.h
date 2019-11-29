@@ -13,12 +13,15 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -66,8 +69,27 @@ public:
     QWidget *tab_person;
     QListWidget *listWidget_personBody;
     QWidget *tab_phy;
+    QLabel *label_21;
     QWidget *tab_res;
+    QLabel *label_22;
     QWidget *page_three;
+    QTabWidget *tabWidget_2;
+    QWidget *tab_camera;
+    QPushButton *pushButton_addDevice;
+    QTableWidget *tableWidget_addDevice;
+    QLabel *label_25;
+    QPushButton *pushButton_addDevice_up;
+    QPushButton *pushButton_addDevice_down;
+    QPushButton *pushButton_addDevice_jump;
+    QSpinBox *spinBox_addDevice;
+    QWidget *tab_ecg;
+    QPushButton *pushButton_addEcg;
+    QTableWidget *tableWidget_addEcg;
+    QPushButton *pushButton_addEcg_jump;
+    QSpinBox *spinBox_addEcg;
+    QPushButton *pushButton_addEcg_up;
+    QLabel *label_26;
+    QPushButton *pushButton_addEcg_down;
     QWidget *page_four;
     QLabel *label_video1;
     QLabel *label_video2;
@@ -87,7 +109,9 @@ public:
     QListWidget *listWidget_xinlv;
     QLabel *label_20;
     QWidget *page_five;
+    QLabel *label_23;
     QWidget *page_six;
+    QLabel *label_24;
     QFrame *line_top;
 
     void setupUi(QMainWindow *T_e_sClass)
@@ -370,19 +394,105 @@ public:
         tab_person->setStyleSheet(QString::fromUtf8("background-color:transparent"));
         listWidget_personBody = new QListWidget(tab_person);
         listWidget_personBody->setObjectName(QString::fromUtf8("listWidget_personBody"));
-        listWidget_personBody->setGeometry(QRect(0, 0, 1170, 608));
+        listWidget_personBody->setGeometry(QRect(0, 0, 1060, 608));
         listWidget_personBody->setStyleSheet(QString::fromUtf8("border-color: transparent;"));
+        listWidget_personBody->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        listWidget_personBody->setSelectionMode(QAbstractItemView::NoSelection);
         listWidget_personBody->setGridSize(QSize(0, 120));
         tabWidget->addTab(tab_person, QString());
         tab_phy = new QWidget();
         tab_phy->setObjectName(QString::fromUtf8("tab_phy"));
+        label_21 = new QLabel(tab_phy);
+        label_21->setObjectName(QString::fromUtf8("label_21"));
+        label_21->setGeometry(QRect(430, 140, 101, 71));
         tabWidget->addTab(tab_phy, QString());
         tab_res = new QWidget();
         tab_res->setObjectName(QString::fromUtf8("tab_res"));
+        label_22 = new QLabel(tab_res);
+        label_22->setObjectName(QString::fromUtf8("label_22"));
+        label_22->setGeometry(QRect(410, 280, 101, 71));
         tabWidget->addTab(tab_res, QString());
         stackedWidget->addWidget(page_two);
         page_three = new QWidget();
         page_three->setObjectName(QString::fromUtf8("page_three"));
+        tabWidget_2 = new QTabWidget(page_three);
+        tabWidget_2->setObjectName(QString::fromUtf8("tabWidget_2"));
+        tabWidget_2->setGeometry(QRect(0, 0, 1200, 610));
+        tabWidget_2->setFont(font9);
+        tabWidget_2->setTabPosition(QTabWidget::West);
+        tab_camera = new QWidget();
+        tab_camera->setObjectName(QString::fromUtf8("tab_camera"));
+        pushButton_addDevice = new QPushButton(tab_camera);
+        pushButton_addDevice->setObjectName(QString::fromUtf8("pushButton_addDevice"));
+        pushButton_addDevice->setGeometry(QRect(465, 20, 130, 40));
+        QFont font10;
+        font10.setPointSize(13);
+        pushButton_addDevice->setFont(font10);
+        tableWidget_addDevice = new QTableWidget(tab_camera);
+        tableWidget_addDevice->setObjectName(QString::fromUtf8("tableWidget_addDevice"));
+        tableWidget_addDevice->setGeometry(QRect(30, 99, 1000, 451));
+        label_25 = new QLabel(tab_camera);
+        label_25->setObjectName(QString::fromUtf8("label_25"));
+        label_25->setGeometry(QRect(380, 70, 300, 15));
+        label_25->setFont(font8);
+        label_25->setLayoutDirection(Qt::LeftToRight);
+        label_25->setStyleSheet(QString::fromUtf8("color: rgb(150, 150, 150);"));
+        label_25->setAlignment(Qt::AlignCenter);
+        pushButton_addDevice_up = new QPushButton(tab_camera);
+        pushButton_addDevice_up->setObjectName(QString::fromUtf8("pushButton_addDevice_up"));
+        pushButton_addDevice_up->setGeometry(QRect(260, 560, 100, 25));
+        pushButton_addDevice_up->setFont(font3);
+        pushButton_addDevice_down = new QPushButton(tab_camera);
+        pushButton_addDevice_down->setObjectName(QString::fromUtf8("pushButton_addDevice_down"));
+        pushButton_addDevice_down->setGeometry(QRect(420, 560, 100, 25));
+        pushButton_addDevice_down->setFont(font3);
+        pushButton_addDevice_jump = new QPushButton(tab_camera);
+        pushButton_addDevice_jump->setObjectName(QString::fromUtf8("pushButton_addDevice_jump"));
+        pushButton_addDevice_jump->setGeometry(QRect(690, 560, 100, 25));
+        pushButton_addDevice_jump->setFont(font3);
+        spinBox_addDevice = new QSpinBox(tab_camera);
+        spinBox_addDevice->setObjectName(QString::fromUtf8("spinBox_addDevice"));
+        spinBox_addDevice->setGeometry(QRect(580, 560, 50, 25));
+        spinBox_addDevice->setFont(font3);
+        spinBox_addDevice->setStyleSheet(QString::fromUtf8("border-color: rgb(65, 130, 195);"));
+        spinBox_addDevice->setMinimum(1);
+        tabWidget_2->addTab(tab_camera, QString());
+        tab_ecg = new QWidget();
+        tab_ecg->setObjectName(QString::fromUtf8("tab_ecg"));
+        pushButton_addEcg = new QPushButton(tab_ecg);
+        pushButton_addEcg->setObjectName(QString::fromUtf8("pushButton_addEcg"));
+        pushButton_addEcg->setGeometry(QRect(465, 20, 130, 40));
+        pushButton_addEcg->setFont(font10);
+        pushButton_addEcg->setInputMethodHints(Qt::ImhNone);
+        tableWidget_addEcg = new QTableWidget(tab_ecg);
+        tableWidget_addEcg->setObjectName(QString::fromUtf8("tableWidget_addEcg"));
+        tableWidget_addEcg->setGeometry(QRect(30, 99, 1000, 451));
+        pushButton_addEcg_jump = new QPushButton(tab_ecg);
+        pushButton_addEcg_jump->setObjectName(QString::fromUtf8("pushButton_addEcg_jump"));
+        pushButton_addEcg_jump->setGeometry(QRect(690, 560, 100, 25));
+        pushButton_addEcg_jump->setFont(font3);
+        spinBox_addEcg = new QSpinBox(tab_ecg);
+        spinBox_addEcg->setObjectName(QString::fromUtf8("spinBox_addEcg"));
+        spinBox_addEcg->setGeometry(QRect(580, 560, 50, 25));
+        spinBox_addEcg->setFont(font3);
+        spinBox_addEcg->setStyleSheet(QString::fromUtf8("border-color: rgb(65, 130, 195);"));
+        spinBox_addEcg->setMinimum(1);
+        pushButton_addEcg_up = new QPushButton(tab_ecg);
+        pushButton_addEcg_up->setObjectName(QString::fromUtf8("pushButton_addEcg_up"));
+        pushButton_addEcg_up->setGeometry(QRect(260, 560, 100, 25));
+        pushButton_addEcg_up->setFont(font3);
+        label_26 = new QLabel(tab_ecg);
+        label_26->setObjectName(QString::fromUtf8("label_26"));
+        label_26->setGeometry(QRect(380, 70, 301, 15));
+        label_26->setFont(font8);
+        label_26->setLayoutDirection(Qt::LeftToRight);
+        label_26->setStyleSheet(QString::fromUtf8("color: rgb(150, 150, 150);"));
+        label_26->setAlignment(Qt::AlignCenter);
+        pushButton_addEcg_down = new QPushButton(tab_ecg);
+        pushButton_addEcg_down->setObjectName(QString::fromUtf8("pushButton_addEcg_down"));
+        pushButton_addEcg_down->setGeometry(QRect(420, 560, 100, 25));
+        pushButton_addEcg_down->setFont(font3);
+        tabWidget_2->addTab(tab_ecg, QString());
         stackedWidget->addWidget(page_three);
         page_four = new QWidget();
         page_four->setObjectName(QString::fromUtf8("page_four"));
@@ -406,19 +516,17 @@ public:
         label_4_title = new QLabel(widget_4_left);
         label_4_title->setObjectName(QString::fromUtf8("label_4_title"));
         label_4_title->setGeometry(QRect(19, 20, 137, 30));
-        QFont font10;
-        font10.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
-        font10.setPointSize(15);
-        font10.setBold(true);
-        font10.setWeight(75);
-        label_4_title->setFont(font10);
+        QFont font11;
+        font11.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
+        font11.setPointSize(15);
+        font11.setBold(true);
+        font11.setWeight(75);
+        label_4_title->setFont(font11);
         label_4_title->setAlignment(Qt::AlignCenter);
         pushButton_begin = new QPushButton(widget_4_left);
         pushButton_begin->setObjectName(QString::fromUtf8("pushButton_begin"));
         pushButton_begin->setGeometry(QRect(25, 510, 125, 40));
-        QFont font11;
-        font11.setPointSize(13);
-        pushButton_begin->setFont(font11);
+        pushButton_begin->setFont(font10);
         label_16 = new QLabel(widget_4_left);
         label_16->setObjectName(QString::fromUtf8("label_16"));
         label_16->setGeometry(QRect(47, 80, 81, 21));
@@ -472,6 +580,10 @@ public:
         listWidget_xinlv = new QListWidget(page_four);
         listWidget_xinlv->setObjectName(QString::fromUtf8("listWidget_xinlv"));
         listWidget_xinlv->setGeometry(QRect(650, 30, 540, 570));
+        listWidget_xinlv->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        listWidget_xinlv->setSelectionMode(QAbstractItemView::NoSelection);
+        listWidget_xinlv->setIconSize(QSize(0, 0));
+        listWidget_xinlv->setGridSize(QSize(0, 225));
         label_20 = new QLabel(page_four);
         label_20->setObjectName(QString::fromUtf8("label_20"));
         label_20->setGeometry(QRect(880, 5, 60, 20));
@@ -485,9 +597,15 @@ public:
         label_20->raise();
         page_five = new QWidget();
         page_five->setObjectName(QString::fromUtf8("page_five"));
+        label_23 = new QLabel(page_five);
+        label_23->setObjectName(QString::fromUtf8("label_23"));
+        label_23->setGeometry(QRect(750, 280, 101, 71));
         stackedWidget->addWidget(page_five);
         page_six = new QWidget();
         page_six->setObjectName(QString::fromUtf8("page_six"));
+        label_24 = new QLabel(page_six);
+        label_24->setObjectName(QString::fromUtf8("label_24"));
+        label_24->setGeometry(QRect(540, 250, 101, 71));
         stackedWidget->addWidget(page_six);
         line_top = new QFrame(widget);
         line_top->setObjectName(QString::fromUtf8("line_top"));
@@ -499,8 +617,9 @@ public:
 
         retranslateUi(T_e_sClass);
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(2);
         tabWidget->setCurrentIndex(0);
+        tabWidget_2->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(T_e_sClass);
@@ -552,8 +671,22 @@ public:
         label_13->setText(QApplication::translate("T_e_sClass", "\346\267\273\345\212\240\346\226\260\346\210\220\345\221\230 \347\273\221\345\256\232\350\256\276\345\244\207", nullptr));
         label_14->setText(QApplication::translate("T_e_sClass", "\344\272\272\345\221\230\346\263\250\345\206\214", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_person), QApplication::translate("T_e_sClass", "\344\272\272\345\221\230\344\277\241\346\201\257\347\256\241\347\220\206", nullptr));
+        label_21->setText(QApplication::translate("T_e_sClass", "\346\232\202\346\227\240\346\225\260\346\215\256", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_phy), QApplication::translate("T_e_sClass", "\344\275\223\350\203\275\350\257\204\344\274\260\350\256\260\345\275\225", nullptr));
+        label_22->setText(QApplication::translate("T_e_sClass", "\346\232\202\346\227\240\346\225\260\346\215\256", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_res), QApplication::translate("T_e_sClass", "\345\237\271\350\256\255\350\257\204\344\274\260\350\256\260\345\275\225", nullptr));
+        pushButton_addDevice->setText(QApplication::translate("T_e_sClass", "\346\267\273\345\212\240\346\226\260\350\256\276\345\244\207", nullptr));
+        label_25->setText(QApplication::translate("T_e_sClass", "\347\263\273\347\273\237\346\224\257\346\214\201\346\265\267\345\272\267\345\250\201\350\247\206\347\275\221\347\273\234\346\221\204\345\203\217\345\244\264\357\274\214\345\205\266\344\275\231\350\277\230\345\234\250\345\274\200\345\217\221\344\270\255", nullptr));
+        pushButton_addDevice_up->setText(QApplication::translate("T_e_sClass", "\344\270\212\344\270\200\351\241\265", nullptr));
+        pushButton_addDevice_down->setText(QApplication::translate("T_e_sClass", "\344\270\213\344\270\200\351\241\265", nullptr));
+        pushButton_addDevice_jump->setText(QApplication::translate("T_e_sClass", "\350\267\263\350\275\254", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_camera), QApplication::translate("T_e_sClass", "\350\247\206\351\242\221\351\207\207\351\233\206\350\256\276\345\244\207", nullptr));
+        pushButton_addEcg->setText(QApplication::translate("T_e_sClass", "\346\267\273\345\212\240\346\226\260\350\256\276\345\244\207", nullptr));
+        pushButton_addEcg_jump->setText(QApplication::translate("T_e_sClass", "\350\267\263\350\275\254", nullptr));
+        pushButton_addEcg_up->setText(QApplication::translate("T_e_sClass", "\344\270\212\344\270\200\351\241\265", nullptr));
+        label_26->setText(QApplication::translate("T_e_sClass", "\347\224\237\345\221\275\344\275\223\345\276\201\344\274\240\346\204\237\345\231\250", nullptr));
+        pushButton_addEcg_down->setText(QApplication::translate("T_e_sClass", "\344\270\213\344\270\200\351\241\265", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_ecg), QApplication::translate("T_e_sClass", "\345\277\203\347\216\207\351\207\207\351\233\206\350\256\276\345\244\207", nullptr));
         label_video1->setText(QString());
         label_video2->setText(QString());
         label_3->setText(QApplication::translate("T_e_sClass", "\347\224\273\351\235\242\344\270\200", nullptr));
@@ -575,6 +708,8 @@ public:
 
         label_4_left->setText(QString());
         label_20->setText(QApplication::translate("T_e_sClass", "\345\277\203\347\216\207\347\233\221\346\265\213", nullptr));
+        label_23->setText(QApplication::translate("T_e_sClass", "\346\232\202\346\227\240\346\225\260\346\215\256", nullptr));
+        label_24->setText(QApplication::translate("T_e_sClass", "\347\263\273\347\273\237\350\256\276\347\275\256", nullptr));
     } // retranslateUi
 
 };
