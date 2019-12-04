@@ -4,14 +4,14 @@
 #include "ui_AddCamera.h"
 #include "T_e_s.h"
 #include "QMessageBox"
+#include "DataStruct.h"
+#include <QDebug>
+#include <DBHelper.h>
+#include "HKCamDriver.h"
 #pragma execution_character_set("utf-8") 
 
-extern QString Team_name;
-extern QString Team_from;
-extern QString Team_number;
-extern QString Team_boss;
-extern QString Team_phone;
-extern QString Team_rater;
+using namespace std;
+
 class AddCamera : public QWidget
 {
 	Q_OBJECT
@@ -25,10 +25,16 @@ private slots:
 	void on_pushButton_cancel_clicked();
 
 signals:
-	void BackTo();
+	void SendData(Device device);
 private:
 	Ui::AddCamera ui;
 
 	void styleSheet();
+
+	Device device;
+	bool isIPAddressValid(const char* pszIPAddr);
+	DBHelper dBHelper;
+	HKCamDriver camDriver;
+
 
 };

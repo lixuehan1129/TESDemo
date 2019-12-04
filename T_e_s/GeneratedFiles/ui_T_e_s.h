@@ -536,19 +536,26 @@ public:
         label_16->setFont(font12);
         label_17 = new QLabel(widget_4_left);
         label_17->setObjectName(QString::fromUtf8("label_17"));
-        label_17->setGeometry(QRect(20, 120, 40, 20));
+        label_17->setGeometry(QRect(30, 100, 40, 20));
         comboBox_video1 = new QComboBox(widget_4_left);
         comboBox_video1->setObjectName(QString::fromUtf8("comboBox_video1"));
-        comboBox_video1->setGeometry(QRect(70, 120, 91, 22));
+        comboBox_video1->setGeometry(QRect(25, 120, 125, 25));
+        QFont font13;
+        font13.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
+        font13.setPointSize(10);
+        font13.setBold(false);
+        font13.setWeight(50);
+        comboBox_video1->setFont(font13);
         comboBox_video2 = new QComboBox(widget_4_left);
         comboBox_video2->setObjectName(QString::fromUtf8("comboBox_video2"));
-        comboBox_video2->setGeometry(QRect(70, 160, 91, 22));
+        comboBox_video2->setGeometry(QRect(25, 170, 125, 25));
+        comboBox_video2->setFont(font13);
         label_18 = new QLabel(widget_4_left);
         label_18->setObjectName(QString::fromUtf8("label_18"));
-        label_18->setGeometry(QRect(20, 160, 40, 20));
+        label_18->setGeometry(QRect(30, 150, 40, 20));
         label_19 = new QLabel(widget_4_left);
         label_19->setObjectName(QString::fromUtf8("label_19"));
-        label_19->setGeometry(QRect(50, 220, 75, 21));
+        label_19->setGeometry(QRect(50, 230, 75, 21));
         label_19->setFont(font12);
         label_19->setAlignment(Qt::AlignCenter);
         listWidget_test_staff = new QListWidget(widget_4_left);
@@ -557,7 +564,7 @@ public:
         QListWidgetItem *__qlistwidgetitem6 = new QListWidgetItem(listWidget_test_staff);
         __qlistwidgetitem6->setTextAlignment(Qt::AlignCenter);
         listWidget_test_staff->setObjectName(QString::fromUtf8("listWidget_test_staff"));
-        listWidget_test_staff->setGeometry(QRect(30, 250, 115, 200));
+        listWidget_test_staff->setGeometry(QRect(25, 260, 125, 200));
         listWidget_test_staff->setEditTriggers(QAbstractItemView::NoEditTriggers);
         listWidget_test_staff->setSelectionMode(QAbstractItemView::NoSelection);
         listWidget_test_staff->setIconSize(QSize(0, 0));
@@ -617,9 +624,9 @@ public:
 
         retranslateUi(T_e_sClass);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(3);
         tabWidget->setCurrentIndex(0);
-        tabWidget_2->setCurrentIndex(1);
+        tabWidget_2->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(T_e_sClass);

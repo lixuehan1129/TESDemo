@@ -70,10 +70,14 @@ T_e_s::T_e_s(QWidget *parent)
 {
 	ui.setupUi(this);
 	initStatus();
+	dBHelper.createConnection();
+	dBHelper.createTable();
+	myEvent();
 }
 
 T_e_s::~T_e_s()
 {
+	dBHelper.close();
 
 }
 
@@ -100,9 +104,16 @@ void T_e_s::initStatus()
 	addListPerson();
 	addListPerson();
 
+	//第三页
+	initDeviceData();
+
 	//第四页
 	//获取视频
-	HK();
+	/*if (initCombo())
+	{
+		HK();
+	}*/
+
 	EcgSet(0);
 	EcgSet(1);
 
@@ -118,6 +129,13 @@ void T_e_s::initStatus()
 	
 }
 
+void T_e_s::myEvent()
+{
+//	AddCamera* add = new AddCamera();
+//	connect(add, SIGNAL(sendData(Device)), this, SLOT(getDeviceData(Device)));
+	
+}
+
 
 
 //快速开始按钮时间
@@ -128,8 +146,9 @@ void T_e_s::on_pushButton_phy_clicked()
 }
 void T_e_s::on_pushButton_res_clicked()
 {
-	setItemColor(3);
-	ui.stackedWidget->setCurrentIndex(3);
+	//setItemColor(3);
+	//ui.stackedWidget->setCurrentIndex(3);
+	QMessageBox::about(NULL, "提醒", "请打开事故应急演练评估");
 }
 void T_e_s::on_pushButton_device_clicked()
 {
@@ -160,35 +179,72 @@ void T_e_s::on_pushButton_set_clicked()
 }
 
 //第三页
+
+void T_e_s::initDeviceData()
+{
+	devices = dBHelper.getDevice();
+	for (int i = 0; i < devices.size(); i++)
+	{
+		ui.tableWidget_addDevice->setItem(i, 0, new QTableWidgetItem(QString("%1").arg(i+1)));
+		ui.tableWidget_addDevice->setItem(i, 1, new QTableWidgetItem(devices[i].cameraName));
+		ui.tableWidget_addDevice->setItem(i, 2, new QTableWidgetItem(devices[i].cameraIp));
+		ui.tableWidget_addDevice->setItem(i, 3, new QTableWidgetItem(devices[i].cameraPort));
+		ui.tableWidget_addDevice->setItem(i, 4, new QTableWidgetItem(devices[i].cameraUser));
+		ui.tableWidget_addDevice->setItem(i, 5, new QTableWidgetItem(devices[i].cameraPw));		
+	}
+	deviceRow = devices.size();
+	ui.tableWidget_addDevice->show();
+
+	//第四页,设置combox
+	initCombo();
+}
+
 void T_e_s::on_pushButton_addDevice_clicked() {
-	AddCamera *add = new AddCamera();
-	add->setWindowModality(Qt::WindowModal);
+	AddCamera* add = new AddCamera;
+	add->setWindowModality(Qt::ApplicationModal);
 	add->setWindowTitle(QObject::tr("输入设备信息"));
+	add->setWindowFlags(Qt::WindowStaysOnTopHint);
+	
 	add->show();
+	connect(add, SIGNAL(SendData(Device)), this, SLOT(getDeviceData(Device)));
+}
+
+void T_e_s::getDeviceData(Device device)
+{
+	devices << device;
+	ui.tableWidget_addDevice->setItem(deviceRow, 0, new QTableWidgetItem(QString("%1").arg(deviceRow + 1)));
+	ui.tableWidget_addDevice->setItem(deviceRow, 1, new QTableWidgetItem(device.cameraName));
+	ui.tableWidget_addDevice->setItem(deviceRow, 2, new QTableWidgetItem(device.cameraIp));
+	ui.tableWidget_addDevice->setItem(deviceRow, 3, new QTableWidgetItem(device.cameraPort));
+	ui.tableWidget_addDevice->setItem(deviceRow, 4, new QTableWidgetItem(device.cameraUser));
+	ui.tableWidget_addDevice->setItem(deviceRow, 5, new QTableWidgetItem(device.cameraPw));
+	//qDebug() << device.cameraIp << deviceRow;
+	ui.tableWidget_addDevice->show();
+	deviceRow = devices.size();
+
+	//initCombo();
+	changeCombox(device);
+
 }
 
 void T_e_s::on_pushButton_addEcg_clicked() {
 
 }
 
-//开始
+//第四页，开始
 void T_e_s::on_pushButton_begin_clicked()
 {
 	if (ui.pushButton_begin->text() == "开始")
 	{
 		ui.pushButton_begin->setText("停止");
 		buttonChange(2);
-
 		ecg[0]->initData();
 		ecg[1]->initData();
-
-	
 	}
 	else
 	{
 		ui.pushButton_begin->setText("开始");
 		buttonChange(1);
-
 		ecg[0]->stopShow();
 		ecg[1]->stopShow();
 	}
@@ -196,8 +252,23 @@ void T_e_s::on_pushButton_begin_clicked()
 
 
 //第四页评估
+bool T_e_s::initCombo()
+{
+	ui.comboBox_video1->clear();
+	ui.comboBox_video2->clear();
+	for (int i = 0; i < devices.size(); i++)
+	{
+		ui.comboBox_video1->addItem(devices[i].cameraIp);
+		ui.comboBox_video2->addItem(devices[i].cameraIp);
+	}
+	HK();
+	return true;
+
+}
+
 void T_e_s::HK()
 {
+	/*
 	m_CamDriver[0].InitHKNetSDK();//
 	m_CamDriver[0].SetScaleFactor(0.5f);
 	m_CamDriver[0].InitCamera("192.168.1.101", "admin", "Zz123456");
@@ -207,43 +278,212 @@ void T_e_s::HK()
 	HKtimer->start(20);
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 	connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+	*/
+
+	//qDebug() << "size" << devices.size();
+	QVariant v(0);
+
+	switch (devices.size())
+	{
+	case 0:
+	{
+		//没有摄像头
+		ui.label_video1->setText("还没有连接设备");
+		ui.label_video2->setText("还没有连接设备");
+		break;
+	}
+	case 1:
+	{
+		//一个摄像头
+		ui.comboBox_video1->setCurrentIndex(0);
+		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
+
+		m_CamDriver[0].InitHKNetSDK();//
+		m_CamDriver[0].SetScaleFactor(0.5f);
+		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
+		m_CamDriver[1].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
+		QTimer* HKtimer = new QTimer(this);
+		HKtimer->start(20);
+		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
+
+		ui.label_video2->setText("还没有连接设备");
+		break;
+	}
+	default:
+	{
+		//2个及以上摄像头
+		ui.comboBox_video1->setCurrentIndex(0);
+		ui.comboBox_video2->setCurrentIndex(1);
+		ui.comboBox_video1->setItemData(secondDevice, v, Qt::UserRole - 1);
+		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
+		//	ui.comboBox_video1->setItemData(secondDevice, Qt::lightGray, Qt::BackgroundColorRole);
+
+		m_CamDriver[0].InitHKNetSDK();//
+		m_CamDriver[0].SetScaleFactor(0.5f);
+		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
+		m_CamDriver[1].InitCamera(devices[secondDevice].cameraIp.toLatin1().data(), devices[secondDevice].cameraUser.toLatin1().data(), devices[secondDevice].cameraPw.toLatin1().data());
+
+		QTimer* HKtimer = new QTimer(this);
+		HKtimer->start(20);
+		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
+		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+		break;
+	}
+	}
+
+	comboxOpen = true;
 }
+
+void T_e_s::changeCombox(Device device)
+{
+	ui.comboBox_video1->addItem(device.cameraIp);
+	ui.comboBox_video2->addItem(device.cameraIp);
+	QVariant v(0);
+	switch (devices.size())
+	{
+	case 1:
+	{
+		//没有摄像头，增加一个
+		ui.comboBox_video1->setCurrentIndex(0);
+		//ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
+		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
+
+		m_CamDriver[0].InitHKNetSDK();//
+		m_CamDriver[0].SetScaleFactor(0.5f);
+		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
+		m_CamDriver[1].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
+		QTimer* HKtimer = new QTimer(this);
+		HKtimer->start(20);
+		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
+
+		ui.label_video2->setText("还没有连接设备");
+		break;
+	}
+	case 2:
+	{
+		//有一个摄像头，后增加一个
+		ui.comboBox_video2->setCurrentIndex(1);
+		ui.comboBox_video1->setItemData(secondDevice, v, Qt::UserRole - 1);
+		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
+
+		if (m_CamDriver[1].ReleaseCamera())
+		{
+			m_CamDriver[1].InitCamera(devices[secondDevice].cameraIp.toLatin1().data(), devices[secondDevice].cameraUser.toLatin1().data(), devices[secondDevice].cameraPw.toLatin1().data());
+			QTimer* HKtimer = new QTimer(this);
+			HKtimer->start(20);
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+		}
+		
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+//第四页，下拉选择
+void T_e_s::on_comboBox_video1_currentIndexChanged(int index)
+{
+	if (comboxOpen)
+	{
+		QVariant v1(0);//不可选中
+		QVariant v2(1 | 32);//可选中
+		//qDebug() << "1" << index;
+
+		if (m_CamDriver[0].ReleaseCamera())
+		{
+
+			m_CamDriver[0].InitCamera(devices[index].cameraIp.toLatin1().data(), devices[index].cameraUser.toLatin1().data(), devices[index].cameraPw.toLatin1().data());
+			QTimer* HKtimer = new QTimer(this);
+			HKtimer->start(20);
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
+
+			ui.comboBox_video2->setItemData(firstDevice, v2, Qt::UserRole - 1);
+			firstDevice = index;
+			ui.comboBox_video2->setItemData(firstDevice, v1, Qt::UserRole - 1);
+		}
+		
+	}
+	
+}
+
+void T_e_s::on_comboBox_video2_currentIndexChanged(int index)
+{
+	if (comboxOpen)
+	{
+		QVariant v1(0);//不可选中
+		QVariant v2(1 | 32);//可选中
+	//	qDebug() << "2" << index;
+
+		if (m_CamDriver[1].ReleaseCamera())
+		{
+			m_CamDriver[1].InitCamera(devices[index].cameraIp.toLatin1().data(), devices[index].cameraUser.toLatin1().data(), devices[index].cameraPw.toLatin1().data());
+			
+			QTimer* HKtimer = new QTimer(this);
+			HKtimer->start(20);
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+
+			ui.comboBox_video1->setItemData(secondDevice, v2, Qt::UserRole - 1);
+			secondDevice = index;
+			ui.comboBox_video1->setItemData(secondDevice, v1, Qt::UserRole - 1);
+		}
+
+	}
+	
+}
+
 
 //获取视频
 //线程
 void T_e_s::getFrame1()
 {
 	if (m_CamDriver[0].GetCamMat(video[0], NULL, 1.0f)) {
-		image = m_CamDriver[0].cvMat2QImage(video[0]);
-		if (image.isNull())
+		if (video[0].empty())
 		{
-			ui.label_video1->setText("还没有设备");
-			ui.label_video2->show();
+			ui.label_video1->setText("还没有连接设备");
 		}
 		else
 		{
-			ui.label_video1->setScaledContents(true);
-			ui.label_video1->setPixmap(QPixmap::fromImage(image));
-			ui.label_video1->show();
+			image = m_CamDriver[0].cvMat2QImage(video[0]);
+			if (image.isNull())
+			{
+				ui.label_video1->setText("还没有连接设备");
+				ui.label_video2->show();
+			}
+			else
+			{
+				ui.label_video1->setScaledContents(true);
+				ui.label_video1->setPixmap(QPixmap::fromImage(image));
+				ui.label_video1->show();
+			}
 		}
+		
 	}
 }
 
 void T_e_s::getFrame2()
 {
 	if (m_CamDriver[1].GetCamMat(video[1], NULL, 1.0f)) {
-		image = m_CamDriver[1].cvMat2QImage(video[1]);
-		if (image.isNull())
+		if (video[1].empty())
 		{
-			ui.label_video2->setText("还没有设备");
-			ui.label_video2->show();
+			ui.label_video2->setText("还没有连接设备");
 		}
 		else
 		{
-			ui.label_video2->setScaledContents(true);
-			ui.label_video2->setPixmap(QPixmap::fromImage(image));
-			ui.label_video2->show();
+			image = m_CamDriver[1].cvMat2QImage(video[1]);
+			if (image.isNull())
+			{
+				ui.label_video2->setText("还没有连接设备");
+				ui.label_video2->show();
+			}
+			else
+			{
+				ui.label_video2->setScaledContents(true);
+				ui.label_video2->setPixmap(QPixmap::fromImage(image));
+				ui.label_video2->show();
+			}
 		}
+		
 	}
 }
 
@@ -258,8 +498,6 @@ void T_e_s::EcgSet(int item)
 	ui.listWidget_xinlv->setItemWidget(newItem, ecg[item]);
 
 }
-
-
 
 
 void T_e_s::addListPerson() {
@@ -281,7 +519,6 @@ void T_e_s::addListPerson() {
 
 	ui.listWidget_personBody->setItemWidget(newItem,personBody);
 
-
 }
 
 //最小化
@@ -294,13 +531,17 @@ void T_e_s::on_pushButton_min_clicked()
 void T_e_s::on_pushButton_close_clicked()
 {
 	printf("Close\n");
-	if (m_CamDriver[0].ReleaseCamera() && m_CamDriver[1].ReleaseCamera())
+	if (devices.size() > 0)
+	{
+		if (m_CamDriver[0].ReleaseCamera() && m_CamDriver[1].ReleaseCamera())
+		{
+			close();
+		}
+	}
+	else
 	{
 		close();
-	}
-	
-	
-	
+	}	
 }
 
 
@@ -467,6 +708,7 @@ void T_e_s::styleSheet()
 
 	QStringList header;
 	header << "编号" << tr("设备名") << "IP地址" << "端口号" << "用户名" << "密码";
+	ui.tableWidget_addDevice->clear();
 	ui.tableWidget_addDevice->setHorizontalHeaderLabels(header);
 	ui.tableWidget_addDevice->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.tableWidget_addDevice->setSelectionMode(QAbstractItemView::NoSelection);
@@ -476,6 +718,7 @@ void T_e_s::styleSheet()
 	ui.tableWidget_addDevice->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 
+	ui.tableWidget_addEcg->clear();
 	ui.tableWidget_addEcg->setColumnCount(6);
 	ui.tableWidget_addEcg->setRowCount(14);
 	ui.tableWidget_addEcg->setHorizontalHeaderLabels(header);
@@ -498,8 +741,9 @@ void T_e_s::styleSheet()
 		" border-radius: 5px;"
 		"padding: 1px 2px 1px 2px;"
 		" min-width: 4em; "
+	//	"min-height: 40px;"
 		"}"
-		"QComboBox QAbstractItemView::item {min-height: 30px;}" //下拉选项高度
+		"QComboBox QAbstractItemView::item {min-height: 25px;}" //下拉选项高度
 		"QComboBox::down-arrow{border-image:url(./Resources/arrow_down_gray.png);}" //下拉箭头
 		"QComboBox::drop-down {"
 		"subcontrol-origin: padding;"
@@ -514,12 +758,15 @@ void T_e_s::styleSheet()
 		" }"
 		"QComboBox:focus{border: 2px solid #996666;}"
 		)).arg("#555555"));
+	ui.comboBox_video1->setView(new QListView());
 	ui.comboBox_video1->setStyleSheet(qss1.join(""));
+	ui.comboBox_video2->setView(new QListView());
 	ui.comboBox_video2->setStyleSheet(qss1.join(""));
 
 	ui.pushButton_begin->setStyleSheet(qssbtn.join(""));
 
-	ui.listWidget_test_staff->setStyleSheet("QListWidget{padding:5px; }"
+	ui.listWidget_test_staff->setStyleSheet("QListWidget{border-radius: 5px;border: 2px solid #999999; padding:5px }"
+		"QScrollBar{ width : 0; height:0; }"
 	);
 
 	ui.label_4_left->setStyleSheet(QString::fromUtf8("QFrame{border-radius: 5px;border: 2px solid %1;}").arg("#999999"));

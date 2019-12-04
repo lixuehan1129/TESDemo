@@ -13,6 +13,7 @@
 #include <AddCamera.h>
 #include <ECG.h>
 #include <iostream>
+#include "DBHelper.h"
 
 using namespace std;
 
@@ -51,11 +52,16 @@ private slots:
 	void on_pushButton_addDevice_clicked();
 	void on_pushButton_addEcg_clicked();
 	void on_pushButton_begin_clicked();
+	void on_comboBox_video1_currentIndexChanged(int index);
+	void on_comboBox_video2_currentIndexChanged(int index);
 	void mouseReleaseEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void getFrame1();
 	void getFrame2();
+
+	void getDeviceData(Device device);
+	
 
 private:
 	Ui::T_e_sClass ui;
@@ -65,6 +71,7 @@ private:
 	void paintEvent(QPaintEvent *event);
 	void styleSheet();
 	void buttonChange(int i);
+	void myEvent();
 	QTimer* timer;
 
 	cv::VideoCapture cap1,cap2;
@@ -76,6 +83,22 @@ private:
 
 	ECG *ecg[MAX_ECG];
 	void EcgSet(int item);
+	DBHelper dBHelper;
+
+	//摄像头
+	QList<Device> devices;	
+	void initDeviceData();
+	int deviceRow = 0;
+
+	//第一、二个选中的摄像头编号
+	int firstDevice = 0, secondDevice = 1;
+	bool initCombo();
+	void changeCombox(Device device);
+
+	//摄像头下拉框开启
+	bool comboxOpen = false;
+
+	
 
 	
 };

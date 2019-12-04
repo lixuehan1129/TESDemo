@@ -46,19 +46,44 @@ int HKCamDriver::ReleaseCamera(void)
 		printf("NET_DVR_StopRealPlay error! Error number: %d\n", NET_DVR_GetLastError());
 		return 0;
 	}
+	//释放播放库资源
+	PlayM4_Stop(nPort[lUserID]);
+	PlayM4_CloseStream(nPort[lUserID]);
+	PlayM4_FreePort(nPort[lUserID]);
 
 	NET_DVR_Logout(lUserID);
 	NET_DVR_Cleanup();
+	//ReleaseImage();
 	return 1;
 }
 
 int HKCamDriver::ReleaseImage()
 {
-	printf("release image");
+	printf("release image\n");
 	cvReleaseImage(pImg);
 	cvReleaseImage(pImgYCrCb);
 	return 1;
 //	cvReleaseImage(&Ip);
+}
+
+int HKCamDriver::RegistDevice(char *sIP, char *UsrName, char *PsW, int Port)
+{
+	NET_DVR_Init();
+
+
+	NET_DVR_DEVICEINFO_V30 struDeviceInfo;
+	lUserID = NET_DVR_Login_V30(sIP, Port, UsrName, PsW, &struDeviceInfo);
+
+	//	printf("Login USERID, %ld\n", lUserID);
+	NET_DVR_Cleanup();
+	if (lUserID < 0) {
+		printf("Login error, %d\n", NET_DVR_GetLastError());	
+		return -1;
+	}
+	else
+	{
+		return lUserID;
+	}
 }
 
 void HKCamDriver::InitHKNetSDK(void)
@@ -109,6 +134,7 @@ CamHandle HKCamDriver::InitCamera(char *sIP, char *UsrName, char *PsW, int Port)
 void CALLBACK  HKCamDriver::DecCBFun(long nPort, char * pBuf, long nSize, FRAME_INFO * pFrameInfo, long nReserved1, long nReserved2)
 {
 	long lFrameType = pFrameInfo->nType;
+	//nPort = lUserID;
 
 	//printf("nport %ld\n", nPort);
 
@@ -141,10 +167,7 @@ void CALLBACK  HKCamDriver::DecCBFun(long nPort, char * pBuf, long nSize, FRAME_
 
 			}
 		}
-
-		
-		
-		
+				
 		ReleaseMutex(hMutex[nPort]);
 	}
 }

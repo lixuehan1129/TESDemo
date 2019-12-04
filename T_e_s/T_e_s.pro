@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = T_e_s
 DESTDIR = ../x64/Debug
-QT += core network gui axserver axcontainer widgets location nfc qml bluetooth positioning printsupport sensors quickwidgets quick 3dcore 3danimation 3dextras 3dinput 3dlogic 3drender 3dquick gamepad openglextensions qmltest quickcontrols2 scxml charts datavisualization
+QT += core sql network gui axserver axcontainer widgets location nfc qml bluetooth positioning printsupport sensors quickwidgets quick 3dcore 3danimation 3dextras 3dinput 3dlogic 3drender 3dquick gamepad openglextensions qmltest quickcontrols2 scxml charts datavisualization
 CONFIG += debug console
 DEFINES += QT_QML_DEBUG _UNICODE _ENABLE_EXTENDED_ALIGNED_STORAGE WIN64 QT_DLL QT_3DCORE_LIB QT_3DANIMATION_LIB QT_3DEXTRAS_LIB QT_3DINPUT_LIB QT_3DLOGIC_LIB QT_3DRENDER_LIB QT_3DQUICK_LIB QT_3DQUICKANIMATION_LIB QT_3DQUICKEXTRAS_LIB QT_3DQUICKINPUT_LIB QT_3DQUICKRENDER_LIB QT_3DQUICKSCENE2D_LIB QT_BLUETOOTH_LIB QT_CHARTS_LIB QT_DATAVISUALIZATION_LIB QT_GAMEPAD_LIB QT_LOCATION_LIB QT_NETWORK_LIB QT_NFC_LIB QT_OPENGLEXTENSIONS_LIB QT_POSITIONING_LIB QT_PRINTSUPPORT_LIB QT_QML_LIB QT_QUICK_LIB QT_QUICKWIDGETS_LIB QT_QUICKCONTROLS2_LIB QT_QMLTEST_LIB QT_SCXML_LIB QT_SENSORS_LIB QT_WIDGETS_LIB
 INCLUDEPATH += ./GeneratedFiles \

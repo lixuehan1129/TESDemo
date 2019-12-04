@@ -1417,16 +1417,8 @@
           <x>25</x>
           <y>120</y>
           <width>125</width>
-          <height>25</height>
+          <height>22</height>
          </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
         </property>
        </widget>
        <widget class="QComboBox" name="comboBox_video2">
@@ -1435,16 +1427,8 @@
           <x>25</x>
           <y>170</y>
           <width>125</width>
-          <height>25</height>
+          <height>22</height>
          </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>黑体</family>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
         </property>
        </widget>
        <widget class="QLabel" name="label_18">
@@ -1485,9 +1469,9 @@
        <widget class="QListWidget" name="listWidget_test_staff">
         <property name="geometry">
          <rect>
-          <x>25</x>
+          <x>15</x>
           <y>260</y>
-          <width>125</width>
+          <width>145</width>
           <height>200</height>
          </rect>
         </property>

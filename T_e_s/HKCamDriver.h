@@ -12,7 +12,7 @@
 #include "QImage"
 
 
-#define MaxCameraNum 4
+#define MaxCameraNum 6
 
 typedef long CamHandle;  
 
@@ -50,6 +50,8 @@ public:
 	static void CALLBACK fRealDataCallBack(LONG lRealHandle, DWORD dwDataType, BYTE *pBuffer, DWORD dwBufSize, void *pUser);
 
 	static void SetScaleFactor(float factor);
+
+	int RegistDevice(char *sIP, char *UsrName, char *PsW, int Port);
 
 private:
 	static void yv12toYUV(char *outYuv, char *inYv12, int width, int height, int widthStep);
