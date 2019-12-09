@@ -9,6 +9,7 @@
 #include <opencv2\highgui\highgui.hpp>
 #include <opencv2\imgproc\imgproc.hpp>  
 
+
 #include "QImage"
 
 
@@ -52,6 +53,9 @@ public:
 	static void SetScaleFactor(float factor);
 
 	int RegistDevice(char *sIP, char *UsrName, char *PsW, int Port);
+
+	void saveData(QString add);
+	void stopData();
 
 private:
 	static void yv12toYUV(char *outYuv, char *inYv12, int width, int height, int widthStep);

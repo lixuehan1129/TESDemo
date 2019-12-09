@@ -38,14 +38,14 @@ public:
     {
         if (ECG->objectName().isEmpty())
             ECG->setObjectName(QString::fromUtf8("ECG"));
-        ECG->resize(540, 220);
+        ECG->resize(510, 220);
         ECG_widget = new QWidget(ECG);
         ECG_widget->setObjectName(QString::fromUtf8("ECG_widget"));
-        ECG_widget->setGeometry(QRect(0, 0, 540, 220));
+        ECG_widget->setGeometry(QRect(0, 0, 510, 220));
         ECG_widget->setStyleSheet(QString::fromUtf8("background-color: rgb(245, 245, 245);"));
         chartView = new QChartView(ECG_widget);
         chartView->setObjectName(QString::fromUtf8("chartView"));
-        chartView->setGeometry(QRect(0, 30, 455, 190));
+        chartView->setGeometry(QRect(0, 30, 425, 190));
         ECG_num = new QLabel(ECG_widget);
         ECG_num->setObjectName(QString::fromUtf8("ECG_num"));
         ECG_num->setGeometry(QRect(70, 10, 121, 25));
@@ -59,12 +59,12 @@ public:
         label->setFont(font);
         ECG_name = new QLabel(ECG_widget);
         ECG_name->setObjectName(QString::fromUtf8("ECG_name"));
-        ECG_name->setGeometry(QRect(400, 10, 120, 25));
+        ECG_name->setGeometry(QRect(370, 10, 120, 25));
         ECG_name->setFont(font);
         ECG_name->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         ECG_widget1 = new QWidget(ECG_widget);
         ECG_widget1->setObjectName(QString::fromUtf8("ECG_widget1"));
-        ECG_widget1->setGeometry(QRect(455, 40, 70, 80));
+        ECG_widget1->setGeometry(QRect(425, 40, 70, 80));
         ECG_widget1->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
         ECG_ecg = new QLabel(ECG_widget1);
         ECG_ecg->setObjectName(QString::fromUtf8("ECG_ecg"));
@@ -98,7 +98,7 @@ public:
         label_4->setAlignment(Qt::AlignCenter);
         ECG_widget2 = new QWidget(ECG_widget);
         ECG_widget2->setObjectName(QString::fromUtf8("ECG_widget2"));
-        ECG_widget2->setGeometry(QRect(455, 130, 70, 80));
+        ECG_widget2->setGeometry(QRect(425, 130, 70, 80));
         ECG_widget2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
         ECG_breath = new QLabel(ECG_widget2);
         ECG_breath->setObjectName(QString::fromUtf8("ECG_breath"));
@@ -107,7 +107,7 @@ public:
         ECG_breath->setAlignment(Qt::AlignCenter);
         label_6 = new QLabel(ECG_widget2);
         label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setGeometry(QRect(10, 42, 50, 20));
+        label_6->setGeometry(QRect(10, 41, 50, 21));
         label_6->setFont(font2);
         label_6->setAlignment(Qt::AlignCenter);
         label_7 = new QLabel(ECG_widget2);

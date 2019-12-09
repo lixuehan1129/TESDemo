@@ -33,18 +33,19 @@ HKCamDriver::HKCamDriver()
 
 HKCamDriver::~HKCamDriver() {
 	
-//	ReleaseCamera();
+	//ReleaseCamera();
+	NET_DVR_Cleanup();
 	ReleaseImage();
 }
 
 int HKCamDriver::ReleaseCamera(void)
 {
-	NET_DVR_Init();
+	//NET_DVR_Init();
 	printf("stop, %ld\n", lUserID);
 
 	if (!NET_DVR_StopRealPlay(lRealPlayHandle)) {
 		printf("NET_DVR_StopRealPlay error! Error number: %d\n", NET_DVR_GetLastError());
-		return 0;
+	//	return 0;
 	}
 	//释放播放库资源
 	PlayM4_Stop(nPort[lUserID]);
@@ -52,7 +53,7 @@ int HKCamDriver::ReleaseCamera(void)
 	PlayM4_FreePort(nPort[lUserID]);
 
 	NET_DVR_Logout(lUserID);
-	NET_DVR_Cleanup();
+	
 	//ReleaseImage();
 	return 1;
 }
@@ -89,7 +90,7 @@ int HKCamDriver::RegistDevice(char *sIP, char *UsrName, char *PsW, int Port)
 void HKCamDriver::InitHKNetSDK(void)
 {
 	NET_DVR_Init();
-	NET_DVR_SetConnectTime(200, 1);
+	NET_DVR_SetConnectTime(200, 3);
 	NET_DVR_SetReconnect(10000, true);
 
 	for (int i = 0; i < MaxCameraNum; i++) {
@@ -112,7 +113,7 @@ CamHandle HKCamDriver::InitCamera(char *sIP, char *UsrName, char *PsW, int Port)
 
 	if (lUserID < 0) {
 		printf("Login error, %d\n", NET_DVR_GetLastError());
-		NET_DVR_Cleanup();
+		//NET_DVR_Cleanup();
 		return -1;
 	}
 
@@ -129,6 +130,22 @@ CamHandle HKCamDriver::InitCamera(char *sIP, char *UsrName, char *PsW, int Port)
 	if (lRealPlayHandle < 0)return 0;
 
 	return lRealPlayHandle;
+}
+
+void HKCamDriver::saveData(QString add)
+{
+	if (lRealPlayHandle > -1)
+	{
+		NET_DVR_SaveRealData(lRealPlayHandle,add.toLatin1().data());
+	}
+}
+
+void HKCamDriver::stopData()
+{
+	if (lRealPlayHandle > -1)
+	{
+	    NET_DVR_StopSaveRealData(lRealPlayHandle);
+	}
 }
 
 void CALLBACK  HKCamDriver::DecCBFun(long nPort, char * pBuf, long nSize, FRAME_INFO * pFrameInfo, long nReserved1, long nReserved2)
@@ -248,12 +265,29 @@ void CALLBACK HKCamDriver::fRealDataCallBack(LONG lRealHandle, DWORD dwDataType,
 
 int HKCamDriver::GetCamMat(cv::Mat& Img, CamHandle handle, float factor)
 {
+	/*double fps;
+	double t = 0;
+	char string[10];
+	t = (double)cv::getTickCount();
+	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+	fps = 1.0 / t;*/
+	
 	/*  Get the Port using handle    */
 	int iPort = nPort[lRealPlayHandle];
 	/*  Check the iPort is vaild     */
 	if (iPort != -1) {
 		WaitForSingleObject(hMutex[iPort], INFINITE);
 		matIma[iPort].copyTo(Img);
+		//sprintf(string, "%.2f", fps);      // 帧率保留两位小数
+		//std::string fpsString("FPS:");
+		//fpsString += string;                    // 在"FPS:"后加入帧率数值字符串
+		//										// 将帧率信息写在输出帧上
+		//putText(Img, // 图像矩阵
+		//	fpsString,                  // string型文字内容
+		//	cv::Point(5, 20),           // 文字坐标，以左下角为原点
+		//	cv::FONT_HERSHEY_SIMPLEX,   // 字体类型
+		//	0.5, // 字体大小
+		//	cv::Scalar(0, 0, 0));       // 字体颜色
 		ReleaseMutex(hMutex[iPort]);	
 		return 1;
 	}

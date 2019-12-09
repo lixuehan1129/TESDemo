@@ -29,6 +29,9 @@ public:
 
 	QList<Device> getDevice();
 
+	//获取人员ID
+	int getPersonCount();
+
 
 private:
 

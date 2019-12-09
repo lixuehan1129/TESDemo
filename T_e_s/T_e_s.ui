@@ -1275,7 +1275,7 @@
         <rect>
          <x>190</x>
          <y>30</y>
-         <width>450</width>
+         <width>480</width>
          <height>270</height>
         </rect>
        </property>
@@ -1291,7 +1291,7 @@
         <rect>
          <x>190</x>
          <y>330</y>
-         <width>450</width>
+         <width>480</width>
          <height>270</height>
         </rect>
        </property>
@@ -1559,9 +1559,9 @@
       <widget class="QListWidget" name="listWidget_xinlv">
        <property name="geometry">
         <rect>
-         <x>650</x>
+         <x>680</x>
          <y>30</y>
-         <width>540</width>
+         <width>510</width>
          <height>570</height>
         </rect>
        </property>

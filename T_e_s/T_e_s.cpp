@@ -72,7 +72,6 @@ T_e_s::T_e_s(QWidget *parent)
 	initStatus();
 	dBHelper.createConnection();
 	dBHelper.createTable();
-	myEvent();
 }
 
 T_e_s::~T_e_s()
@@ -109,11 +108,12 @@ void T_e_s::initStatus()
 
 	//第四页
 	//获取视频
-	/*if (initCombo())
-	{
-		HK();
-	}*/
 
+	//创建存放视频文件的文件夹
+	std::string prefix = "./VideoStore/";
+	if (_access(prefix.c_str(), 0) == -1)	//如果文件夹不存在
+		_mkdir(prefix.c_str());				//则创建
+	
 	EcgSet(0);
 	EcgSet(1);
 
@@ -128,15 +128,6 @@ void T_e_s::initStatus()
 	connect(myTimer, SIGNAL(timeout()), this, SLOT(GetDateTime()));
 	
 }
-
-void T_e_s::myEvent()
-{
-//	AddCamera* add = new AddCamera();
-//	connect(add, SIGNAL(sendData(Device)), this, SLOT(getDeviceData(Device)));
-	
-}
-
-
 
 //快速开始按钮时间
 void T_e_s::on_pushButton_phy_clicked()
@@ -160,15 +151,17 @@ void T_e_s::on_pushButton_data_clicked()
 	setItemColor(1);
 	ui.stackedWidget->setCurrentIndex(1);
 }
+
+//添加用户
 void T_e_s::on_pushButton_reg_clicked()
 {
-
+	PersonEvent();
 }
 
 //添加用户
 void T_e_s::on_pushButton_add_clicked()
 {
-
+	PersonEvent();
 }
 
 
@@ -176,6 +169,18 @@ void T_e_s::on_pushButton_add_clicked()
 void T_e_s::on_pushButton_set_clicked()
 {
 	ui.stackedWidget->setCurrentIndex(5);
+}
+
+//注册成员
+void T_e_s::PersonEvent()
+{
+	AddPerson* addPerson = new AddPerson;
+	addPerson->setWindowModality(Qt::ApplicationModal);
+	addPerson->setWindowTitle(QObject::tr("输入设备信息"));
+	addPerson->setWindowFlags(Qt::WindowStaysOnTopHint);
+
+	addPerson->show();
+
 }
 
 //第三页
@@ -234,20 +239,64 @@ void T_e_s::on_pushButton_addEcg_clicked() {
 //第四页，开始
 void T_e_s::on_pushButton_begin_clicked()
 {
+	ui.pushButton_begin->setEnabled(false);
 	if (ui.pushButton_begin->text() == "开始")
 	{
 		ui.pushButton_begin->setText("停止");
+		//ui.pushButton_begin->set
 		buttonChange(2);
-		ecg[0]->initData();
-		ecg[1]->initData();
+
+		ui.comboBox_video1->setEnabled(false);
+		ui.comboBox_video2->setEnabled(false);
+
+		videoWriteOpen = true;
+		
+		//文件名
+		QDateTime dateTime(QDateTime::currentDateTime());
+		QString qStr = dateTime.toString("yyyyMMddhhmmss");
+		QString qStrTime1 = "./VideoStore/" + qStr + "_01.avi";
+		QString qStrTime2 = "./VideoStore/" + qStr + "_02.avi";
+		//m_CamDriver[0].saveData(qStrTime1);
+		//m_CamDriver[1].saveData(qStrTime2);
+		outputVideo[0].open(qStrTime1.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 20.0, Size(640, 360));
+		outputVideo[1].open(qStrTime2.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 20.0, Size(640, 360));
+
+		//ecg[0]->initData();
+		//ecg[1]->initData();
+
+		buttonTimer = new QTimer();
+		buttonTimer->start(2000);
+		connect(buttonTimer, SIGNAL(timeout()), this, SLOT(buttonEn()));
 	}
 	else
 	{
 		ui.pushButton_begin->setText("开始");
 		buttonChange(1);
-		ecg[0]->stopShow();
-		ecg[1]->stopShow();
+
+		ui.comboBox_video1->setEnabled(true);
+		ui.comboBox_video2->setEnabled(true);
+
+		videoWriteOpen = false;
+
+		//m_CamDriver[0].stopData();
+		//m_CamDriver[1].stopData();
+
+		outputVideo[0].release();
+		outputVideo[1].release();
+
+		//ecg[0]->stopShow();
+		//ecg[1]->stopShow();
+
+		buttonTimer = new QTimer();
+		buttonTimer->start(1500);
+		connect(buttonTimer, SIGNAL(timeout()), this, SLOT(buttonEn()));
 	}
+}
+
+void T_e_s::buttonEn()
+{
+	ui.pushButton_begin->setEnabled(true);
+	buttonTimer->stop();
 }
 
 
@@ -268,6 +317,13 @@ bool T_e_s::initCombo()
 
 void T_e_s::HK()
 {
+	m_CamDriver[0].InitHKNetSDK();//
+	m_CamDriver[0].SetScaleFactor(0.5f);
+	//m_CamDriver[1].InitHKNetSDK();//
+	//m_CamDriver[1].SetScaleFactor(0.5f);
+
+	HKtimer = new QTimer(this);
+	HKtimer->start(40);
 	/*
 	m_CamDriver[0].InitHKNetSDK();//
 	m_CamDriver[0].SetScaleFactor(0.5f);
@@ -298,12 +354,12 @@ void T_e_s::HK()
 		ui.comboBox_video1->setCurrentIndex(0);
 		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
 
-		m_CamDriver[0].InitHKNetSDK();//
-		m_CamDriver[0].SetScaleFactor(0.5f);
+		
+		//m_CamDriver[1].InitHKNetSDK();//
+		//m_CamDriver[1].SetScaleFactor(0.5f);
 		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
 		m_CamDriver[1].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
-		QTimer* HKtimer = new QTimer(this);
-		HKtimer->start(20);
+	
 		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 
 		ui.label_video2->setText("还没有连接设备");
@@ -318,13 +374,15 @@ void T_e_s::HK()
 		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
 		//	ui.comboBox_video1->setItemData(secondDevice, Qt::lightGray, Qt::BackgroundColorRole);
 
-		m_CamDriver[0].InitHKNetSDK();//
-		m_CamDriver[0].SetScaleFactor(0.5f);
+		//m_CamDriver[0].InitHKNetSDK();//
+		//m_CamDriver[0].SetScaleFactor(0.5f);
+		//m_CamDriver[1].InitHKNetSDK();//
+		//m_CamDriver[1].SetScaleFactor(0.5f);
 		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
 		m_CamDriver[1].InitCamera(devices[secondDevice].cameraIp.toLatin1().data(), devices[secondDevice].cameraUser.toLatin1().data(), devices[secondDevice].cameraPw.toLatin1().data());
 
-		QTimer* HKtimer = new QTimer(this);
-		HKtimer->start(20);
+		//HKtimer = new QTimer(this);
+		//HKtimer->start(40);
 		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 		break;
@@ -348,12 +406,14 @@ void T_e_s::changeCombox(Device device)
 		//ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
 		ui.comboBox_video2->setItemData(firstDevice, v, Qt::UserRole - 1);
 
-		m_CamDriver[0].InitHKNetSDK();//
-		m_CamDriver[0].SetScaleFactor(0.5f);
+		//m_CamDriver[0].InitHKNetSDK();//
+		//m_CamDriver[0].SetScaleFactor(0.5f);
+		//m_CamDriver[1].InitHKNetSDK();//
+		//m_CamDriver[1].SetScaleFactor(0.5f);
 		m_CamDriver[0].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
 		m_CamDriver[1].InitCamera(devices[firstDevice].cameraIp.toLatin1().data(), devices[firstDevice].cameraUser.toLatin1().data(), devices[firstDevice].cameraPw.toLatin1().data());
-		QTimer* HKtimer = new QTimer(this);
-		HKtimer->start(20);
+		//HKtimer = new QTimer(this);
+		//HKtimer->start(40);
 		connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 
 		ui.label_video2->setText("还没有连接设备");
@@ -369,8 +429,13 @@ void T_e_s::changeCombox(Device device)
 		if (m_CamDriver[1].ReleaseCamera())
 		{
 			m_CamDriver[1].InitCamera(devices[secondDevice].cameraIp.toLatin1().data(), devices[secondDevice].cameraUser.toLatin1().data(), devices[secondDevice].cameraPw.toLatin1().data());
-			QTimer* HKtimer = new QTimer(this);
-			HKtimer->start(20);
+			//QTimer* HKtimer = new QTimer(this);
+			//HKtimer->start(40);
+			//connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+			HKtimer->stop();
+			HKtimer = new QTimer(this);
+			HKtimer->start(40);
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 		}
 		
@@ -388,15 +453,18 @@ void T_e_s::on_comboBox_video1_currentIndexChanged(int index)
 	{
 		QVariant v1(0);//不可选中
 		QVariant v2(1 | 32);//可选中
-		//qDebug() << "1" << index;
+		qDebug() << "1" << devices[index].cameraIp;
 
 		if (m_CamDriver[0].ReleaseCamera())
 		{
 
 			m_CamDriver[0].InitCamera(devices[index].cameraIp.toLatin1().data(), devices[index].cameraUser.toLatin1().data(), devices[index].cameraPw.toLatin1().data());
-			QTimer* HKtimer = new QTimer(this);
-			HKtimer->start(20);
+			
+			HKtimer->stop();
+			HKtimer = new QTimer(this);
+			HKtimer->start(40);
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 
 			ui.comboBox_video2->setItemData(firstDevice, v2, Qt::UserRole - 1);
 			firstDevice = index;
@@ -414,13 +482,20 @@ void T_e_s::on_comboBox_video2_currentIndexChanged(int index)
 		QVariant v1(0);//不可选中
 		QVariant v2(1 | 32);//可选中
 	//	qDebug() << "2" << index;
+		qDebug() << "2" << devices[index].cameraIp;
 
 		if (m_CamDriver[1].ReleaseCamera())
 		{
 			m_CamDriver[1].InitCamera(devices[index].cameraIp.toLatin1().data(), devices[index].cameraUser.toLatin1().data(), devices[index].cameraPw.toLatin1().data());
 			
-			QTimer* HKtimer = new QTimer(this);
-			HKtimer->start(20);
+			//QTimer* HKtimer = new QTimer(this);
+			//HKtimer->start(40);
+			//connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
+
+			HKtimer->stop();
+			HKtimer = new QTimer(this);
+			HKtimer->start(40);
+			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 
 			ui.comboBox_video1->setItemData(secondDevice, v2, Qt::UserRole - 1);
@@ -444,6 +519,11 @@ void T_e_s::getFrame1()
 		}
 		else
 		{
+			//录制
+			if (videoWriteOpen)
+			{
+				outputVideo[0].write(video[0]);
+			}
 			image = m_CamDriver[0].cvMat2QImage(video[0]);
 			if (image.isNull())
 			{
@@ -470,6 +550,11 @@ void T_e_s::getFrame2()
 		}
 		else
 		{
+			//录制
+			if (videoWriteOpen)
+			{
+				outputVideo[1].write(video[1]);
+			}
 			image = m_CamDriver[1].cvMat2QImage(video[1]);
 			if (image.isNull())
 			{
@@ -571,7 +656,7 @@ void T_e_s::buttonChange(int i)
 	if (i == 1)
 	{
 		qssbtn.append(QString(
-			"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid #AAAAAA;background:#e1e1e1;color:#777777} "
+			"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
 			"QPushButton:enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
 			"QPushButton:hover {border-style:none;padding:2px;border-radius:5px;border:2px solid %2;background:%2;color:#FFFFFF}"
 			"QPushButton:pressed{border-style:none;padding:2px;border-radius:5px;border:2px solid %3;background:%3;color:#FFFFFF}"
@@ -580,7 +665,7 @@ void T_e_s::buttonChange(int i)
 	else
 	{
 		qssbtn.append(QString(
-			"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid #AAAAAA;background:#e1e1e1;color:#777777} "
+			"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
 			"QPushButton:enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
 			"QPushButton:hover {border-style:none;padding:2px;border-radius:5px;border:2px solid %2;background:%2;color:#FFFFFF}"
 			"QPushButton:pressed{border-style:none;padding:2px;border-radius:5px;border:2px solid %3;background:%3;color:#FFFFFF}"
@@ -804,27 +889,27 @@ void T_e_s::setItemColor(int index)
 }
 
 //界面拖动
-void T_e_s::mousePressEvent(QMouseEvent *event)
-{
-	if (event->button() == Qt::LeftButton) {
-		m_Drag = true;
-		m_DragPosition = event->globalPos() - this->pos();
-		event->accept();
-	}
-}
-
-void T_e_s::mouseMoveEvent(QMouseEvent *event)
-{
-	if (m_Drag && (event->buttons() && Qt::LeftButton)) {
-		move(event->globalPos() - m_DragPosition);
-		event->accept();
-	}
-}
-
-void T_e_s::mouseReleaseEvent(QMouseEvent *event)
-{
-	m_Drag = false;
-}
+//void T_e_s::mousePressEvent(QMouseEvent *event)
+//{
+//	if (event->button() == Qt::LeftButton) {
+//		m_Drag = true;
+//		m_DragPosition = event->globalPos() - this->pos();
+//		event->accept();
+//	}
+//}
+//
+//void T_e_s::mouseMoveEvent(QMouseEvent *event)
+//{
+//	if (m_Drag && (event->buttons() && Qt::LeftButton)) {
+//		move(event->globalPos() - m_DragPosition);
+//		event->accept();
+//	}
+//}
+//
+//void T_e_s::mouseReleaseEvent(QMouseEvent *event)
+//{
+//	m_Drag = false;
+//}
 
 //边框阴影
 void T_e_s::paintEvent(QPaintEvent *event)

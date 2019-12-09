@@ -73,6 +73,9 @@
     <ClCompile Include="AddCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AddPerson.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="T_e_s.h">
@@ -87,6 +90,9 @@
     <QtMoc Include="AddCamera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="AddPerson.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="T_e_s.ui">
@@ -96,6 +102,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="AddCamera.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AddPerson.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

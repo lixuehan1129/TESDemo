@@ -14,4 +14,17 @@ typedef struct {
 
 Q_DECLARE_METATYPE(Device)
 
+//Person
+typedef struct {
+	QString personId;
+	QString personName;
+	int personAge;
+	int personSex;
+	int personWeight;
+	int personHeight;
+	QString personBand;
+}Person;
+
+Q_DECLARE_METATYPE(Person)
+
 

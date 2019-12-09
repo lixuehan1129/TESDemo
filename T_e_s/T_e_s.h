@@ -11,9 +11,12 @@
 #include "HK_camera.h"
 #include <HKCamDriver.h>
 #include <AddCamera.h>
+#include <AddPerson.h>
 #include <ECG.h>
 #include <iostream>
 #include "DBHelper.h"
+#include "direct.h"
+#include "io.h"
 
 using namespace std;
 
@@ -54,11 +57,13 @@ private slots:
 	void on_pushButton_begin_clicked();
 	void on_comboBox_video1_currentIndexChanged(int index);
 	void on_comboBox_video2_currentIndexChanged(int index);
-	void mouseReleaseEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
-	void mousePressEvent(QMouseEvent *event);
+	//void mouseReleaseEvent(QMouseEvent *event);
+	//void mouseMoveEvent(QMouseEvent *event);
+	//void mousePressEvent(QMouseEvent *event);
 	void getFrame1();
 	void getFrame2();
+
+	void buttonEn();
 
 	void getDeviceData(Device device);
 	
@@ -71,7 +76,7 @@ private:
 	void paintEvent(QPaintEvent *event);
 	void styleSheet();
 	void buttonChange(int i);
-	void myEvent();
+	void PersonEvent();
 	QTimer* timer;
 
 	cv::VideoCapture cap1,cap2;
@@ -80,6 +85,14 @@ private:
 	void HK();
 	HKCamDriver m_CamDriver[2];
 	cv::Mat video[2];
+
+	//录制
+	//QString qStrTime;
+	bool videoWriteOpen = false;
+	VideoWriter outputVideo[2];
+
+	QTimer *buttonTimer;
+
 
 	ECG *ecg[MAX_ECG];
 	void EcgSet(int item);
@@ -90,6 +103,7 @@ private:
 	void initDeviceData();
 	int deviceRow = 0;
 
+	QTimer* HKtimer; //显示视频
 	//第一、二个选中的摄像头编号
 	int firstDevice = 0, secondDevice = 1;
 	bool initCombo();

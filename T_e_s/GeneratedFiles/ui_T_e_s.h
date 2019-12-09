@@ -498,11 +498,11 @@ public:
         page_four->setObjectName(QString::fromUtf8("page_four"));
         label_video1 = new QLabel(page_four);
         label_video1->setObjectName(QString::fromUtf8("label_video1"));
-        label_video1->setGeometry(QRect(190, 30, 450, 270));
+        label_video1->setGeometry(QRect(190, 30, 480, 270));
         label_video1->setAlignment(Qt::AlignCenter);
         label_video2 = new QLabel(page_four);
         label_video2->setObjectName(QString::fromUtf8("label_video2"));
-        label_video2->setGeometry(QRect(190, 330, 450, 270));
+        label_video2->setGeometry(QRect(190, 330, 480, 270));
         label_video2->setAlignment(Qt::AlignCenter);
         label_3 = new QLabel(page_four);
         label_3->setObjectName(QString::fromUtf8("label_3"));
@@ -586,7 +586,7 @@ public:
         listWidget_test_staff->raise();
         listWidget_xinlv = new QListWidget(page_four);
         listWidget_xinlv->setObjectName(QString::fromUtf8("listWidget_xinlv"));
-        listWidget_xinlv->setGeometry(QRect(650, 30, 540, 570));
+        listWidget_xinlv->setGeometry(QRect(680, 30, 510, 570));
         listWidget_xinlv->setEditTriggers(QAbstractItemView::NoEditTriggers);
         listWidget_xinlv->setSelectionMode(QAbstractItemView::NoSelection);
         listWidget_xinlv->setIconSize(QSize(0, 0));

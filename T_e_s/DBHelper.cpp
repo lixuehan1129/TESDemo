@@ -38,12 +38,15 @@ void DBHelper::createTable()
 		"camera_ip VARCHAR NOT NULL UNIQUE,camera_port VARCHAR NOT NULL,camera_user VARCHAR NOT NULL,camera_pw VARCHAR NOT NULL)");
 	if (success)
 	{
-		printf("create_success\n");
+	//	printf("create_success\n");
 	}
 	else
 	{
-		printf("create_failed\n");
+	//	printf("create_failed\n");
 	}
+
+	query.exec("CREATE TABLE IF NOT EXISTS person(person_id VARCHAR NOT NULL UNIQUE,person_name VARCHAR NOT NULL,person_age INTEGER NOT NULL,"
+	"person_sex INTEGER NOT NULL,person_weight INTEGER,person_height INTEGER,person_band VARCHAR)");
 
 	db.close();
 
@@ -104,6 +107,36 @@ QList<Device> DBHelper::getDevice()
 	db.close();
 	return devices;
 	
+}
+
+int DBHelper::getPersonCount()
+{
+	QSqlDatabase db = createConnection();
+	QSqlQuery query(db);
+	bool success = query.exec("SELECT COUNT(person_id) FROM person");
+
+	if (success)
+	{
+		
+		if (db.driver()->hasFeature(QSqlDriver::QuerySize))
+		{
+			qDebug() << "555" << query.size();
+			return query.size();
+		}
+		else
+		{
+			query.next();
+			qDebug() << "556" << query.value(0).toInt();
+			return query.value(0).toInt();
+		}
+	
+	}
+	else
+	{
+		QSqlError lastError = query.lastError();
+		qDebug() << lastError.driverText();
+		return -1;
+	}
 }
 
 void DBHelper::close()
