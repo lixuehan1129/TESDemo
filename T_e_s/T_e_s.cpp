@@ -103,11 +103,14 @@ void T_e_s::initStatus()
 	addListPerson();
 	addListPerson();
 
+	initTrain();
+
 	//第三页
 	initDeviceData();
 
 	//第四页
 	//获取视频
+	initRecordTime();
 
 	//创建存放视频文件的文件夹
 	std::string prefix = "./VideoStore/";
@@ -150,6 +153,7 @@ void T_e_s::on_pushButton_data_clicked()
 {
 	setItemColor(1);
 	ui.stackedWidget->setCurrentIndex(1);
+	ui.tabWidget->setCurrentIndex(1);
 }
 
 //添加用户
@@ -183,6 +187,207 @@ void T_e_s::PersonEvent()
 
 }
 
+void T_e_s::initTrain()
+{
+	ui.comboBox_per1->clear();
+	QStringList strList;
+	strList << "2019-12-01 10:00" << "2019-12-01 12:00" << "2019-12-01 15:00" << "2019-12-04 15:00" << "2019-12-06 15:00" << "2019-12-08 15:00" << "2019-12-10 15:00" << "2019-12-11 15:00";
+	ui.comboBox_per1->addItems(strList);
+
+	for (int i = 0; i < 8; i++)
+	{
+		ui.tableWidget_per1->setItem(i, 0, new QTableWidgetItem("name"));
+		ui.tableWidget_per1->setItem(i, 1, new QTableWidgetItem("优"));
+		ui.tableWidget_per1->setItem(i, 2, new QTableWidgetItem("优"));
+		ui.tableWidget_per1->setItem(i, 3, new QTableWidgetItem("良"));
+		ui.tableWidget_per1->setItem(i, 4, new QTableWidgetItem("合格"));
+		ui.tableWidget_per1->setItem(i, 5, new QTableWidgetItem("合格"));
+		ui.tableWidget_per1->setItem(i, 6, new QTableWidgetItem("良"));
+		ui.tableWidget_per1->setItem(i, 7, new QTableWidgetItem("优"));
+		ui.tableWidget_per1->setItem(i, 8, new QTableWidgetItem("优"));
+		QPushButton* pushButton = new QPushButton();
+		pushButton->setText("前往");
+		pushButton->setStyleSheet("QPushButton:enabled {background:transparent;text-decoration:underline;color:#4182C3} "
+			"QPushButton:hover {background:transparent;text-decoration:underline;color:#17abe3}"
+			"QPushButton:pressed{background:transparent;text-decoration:underline;color:#2a79bd}");
+		//pushButton->
+		ui.tableWidget_per1->setCellWidget(i, 9, pushButton);
+		connect(pushButton, SIGNAL(clicked(bool)), this, SLOT(GoTrainDetail()));
+	}
+}
+
+void T_e_s::GoTrainDetail()
+{
+	QPushButton* pushButton = qobject_cast<QPushButton*>(sender());
+	int x = pushButton->frameGeometry().x();
+	int y = pushButton->frameGeometry().y();
+	QModelIndex index = ui.tableWidget_per1->indexAt(QPoint(x, y));
+	int row = index.row();
+	int column = index.column();
+	qDebug() << row << column;
+
+	//点击跳转
+	ui.stackedWidget_person->setCurrentIndex(1);
+
+	ui.label_name_per2->setText("李学翰");
+
+	//更新UI
+	chartTimer = new QTimer(this);
+	chartTimer->start(30);
+	connect(chartTimer, SIGNAL(timeout()), this, SLOT(updateGetChart()));
+	
+
+}
+void T_e_s::updateGetChart()
+{
+	TableStyle();
+
+	QStringList headerPer;
+	headerPer << tr("5000米长跑") << "100米短跑" << "高抬腿跑" << "俯卧撑" << "仰卧起坐" << "单/双杠" << "蛇形跑" << "负重深蹲";
+
+	for (int i = 0; i < 8; i++)
+	{
+		ui.tableWidget_per2->setItem(i, 0, new QTableWidgetItem(headerPer.at(i)));
+
+		initChart(i);
+	}
+
+	chartTimer->stop();
+}
+
+//添加折线图
+void T_e_s::initChart(int i)
+{
+
+	QChartView* chartView = new QChartView();
+	chartView->sizePolicy();
+	chartView->setMinimumHeight(200);
+	chartView->setAutoFillBackground(true);
+	chartView->setRenderHint(QPainter::Antialiasing);
+	chartView->setStyleSheet("QGraphicsView{background-color:transparent;border:0px}");
+
+	chartView->setChart(createLineChart());
+	
+	ui.tableWidget_per2->setCellWidget(i, 1, chartView);
+}
+
+QChart* T_e_s::createLineChart() const
+{
+	QChart* chart = new QChart();	
+	QCategoryAxis* axisX = new QCategoryAxis();
+	QValueAxis* axisY = new QValueAxis();
+	QLineSeries *series = new QLineSeries();
+
+	//散点图(用于边框)
+	QScatterSeries* series1 = new QScatterSeries();
+	series1->setMarkerShape(QScatterSeries::MarkerShapeCircle);//圆形的点
+	series1->setBorderColor(QColor(Qt::blue));  //边框颜色
+	series1->setBrush(QBrush(QColor(Qt::blue)));//背景颜色
+	series1->setMarkerSize(8);                     //点大小
+	
+	QScatterSeries* series2 = new QScatterSeries();
+	series2->setMarkerShape(QScatterSeries::MarkerShapeCircle);//圆形的点
+	series2->setBorderColor(QColor(Qt::blue));  //边框颜色
+	series2->setBrush(QBrush(QColor(Qt::blue)));//背景颜色
+	series2->setMarkerSize(10);
+
+	series->clear();
+	series1->clear();
+	series2->clear();
+
+	chart->addSeries(series);//添加系列到QChart上
+	chart->addSeries(series1);
+	chart->addSeries(series2);
+	
+	chart->setBackgroundVisible(false);
+	axisY->setRange(50, 100);
+	axisY->setTickCount(6);//纵坐标
+	axisX->setStartValue(0.5);
+	axisX->setMin(0);
+	axisX->setMax(8.5);
+	axisX->append("12-01", 1.5);
+	axisX->append("12-02", 2.5);
+	axisX->append("12-04", 3.5);
+	axisX->append("12-05", 4.5);
+	axisX->append("12-06", 5.5);
+	axisX->append("12-07", 6.5);
+	axisX->append("12-09", 7.5);
+	axisX->append("12-11", 8.5);
+	
+	axisX->setGridLinePen(QPen(Qt::gray, 1, Qt::DashDotDotLine, Qt::SquareCap, Qt::RoundJoin)); //网格样式
+	axisY->setGridLinePen(QPen(Qt::gray, 1, Qt::DashDotDotLine, Qt::SquareCap, Qt::RoundJoin));
+
+	axisX->setLinePen(QPen(Qt::gray, 1, Qt::DashDotDotLine, Qt::SquareCap, Qt::RoundJoin));//坐标轴样式
+	axisY->setLinePen(QPen(Qt::gray, 1, Qt::DashDotDotLine, Qt::SquareCap, Qt::RoundJoin));
+
+	axisY->setGridLineVisible(true);//显示线框
+	axisX->setGridLineVisible(false);
+	chart->addAxis(axisX, Qt::AlignBottom);
+	chart->addAxis(axisY, Qt::AlignLeft);
+
+	//把曲线关联到坐标轴
+	series->attachAxis(axisX);
+	series->attachAxis(axisY);
+
+	series1->attachAxis(axisX);
+	series1->attachAxis(axisY);
+
+	series2->attachAxis(axisX);
+	series2->attachAxis(axisY);
+
+	series->setColor(QColor(Qt::blue));//设置线的颜色
+	Helper::setLineChartMargins(chart, 3);//设置折线图边距
+
+	*series << QPointF(1, 85) << QPointF(2, 56) << QPointF(3, 95) << QPointF(4, 65) << QPointF(5, 90) << QPointF(6, 80) << QPointF(7, 57) << QPointF(8, 97);
+	*series1 << QPointF(1, 85) << QPointF(2, 56) << QPointF(3, 95) << QPointF(4, 65) << QPointF(5, 90) << QPointF(6, 80) << QPointF(7, 57) << QPointF(8, 97);
+	
+	chart->legend()->hide();//不显示注释
+
+	connect(series1, &QScatterSeries::hovered, this, &T_e_s::slotPointHoverd);
+	connect(series1, &QScatterSeries::clicked, this, &T_e_s::slotPointClicked);
+
+	return chart;
+	
+}
+
+void T_e_s::slotPointClicked(const QPointF &point)
+{
+	qDebug() << point.x();
+	qDebug() << ui.tableWidget_per2->currentRow();
+
+	Replay *replay = new Replay;
+	replay->setWindowModality(Qt::ApplicationModal);
+	replay->setWindowTitle(QObject::tr("训练细节"));
+	//replay->setWindowFlags(Qt::WindowStaysOnTopHint);
+	connect(this, SIGNAL(replayGo(int, int, int)), replay, SLOT(replayGet(int, int, int)));
+	emit replayGo(ui.tableWidget_per2->currentRow(), point.x(), point.y());
+	replay->show();
+	//connect(add, SIGNAL(SendData(Device)), this, SLOT(getDeviceData(Device)));
+}
+
+void T_e_s::slotPointHoverd(const QPointF &point, bool state)
+{
+	//QScatterSeries* series = qobject_cast<QScatterSeries*>(sender());
+	if (state) {
+	//	QPoint curPos = mapFromGlobal(QCursor::pos());
+		
+	//	qDebug() << ui.tableWidget_per2->currentItem()->row();
+		//qDebug() << point.x();
+		
+	}
+	else
+	{
+		//series2->remove(point);
+		//qDebug() << "离开" <<point.x();
+	}
+		
+}
+
+void T_e_s::on_pushButton_back_per2_clicked()
+{
+	ui.stackedWidget_person->setCurrentIndex(0);
+}
+
 //第三页
 
 void T_e_s::initDeviceData()
@@ -195,7 +400,7 @@ void T_e_s::initDeviceData()
 		ui.tableWidget_addDevice->setItem(i, 2, new QTableWidgetItem(devices[i].cameraIp));
 		ui.tableWidget_addDevice->setItem(i, 3, new QTableWidgetItem(devices[i].cameraPort));
 		ui.tableWidget_addDevice->setItem(i, 4, new QTableWidgetItem(devices[i].cameraUser));
-		ui.tableWidget_addDevice->setItem(i, 5, new QTableWidgetItem(devices[i].cameraPw));		
+		ui.tableWidget_addDevice->setItem(i, 5, new QTableWidgetItem("1280*720"));		
 	}
 	deviceRow = devices.size();
 	ui.tableWidget_addDevice->show();
@@ -222,7 +427,7 @@ void T_e_s::getDeviceData(Device device)
 	ui.tableWidget_addDevice->setItem(deviceRow, 2, new QTableWidgetItem(device.cameraIp));
 	ui.tableWidget_addDevice->setItem(deviceRow, 3, new QTableWidgetItem(device.cameraPort));
 	ui.tableWidget_addDevice->setItem(deviceRow, 4, new QTableWidgetItem(device.cameraUser));
-	ui.tableWidget_addDevice->setItem(deviceRow, 5, new QTableWidgetItem(device.cameraPw));
+	ui.tableWidget_addDevice->setItem(deviceRow, 5, new QTableWidgetItem("1280*720"));
 	//qDebug() << device.cameraIp << deviceRow;
 	ui.tableWidget_addDevice->show();
 	deviceRow = devices.size();
@@ -256,13 +461,17 @@ void T_e_s::on_pushButton_begin_clicked()
 		QString qStr = dateTime.toString("yyyyMMddhhmmss");
 		QString qStrTime1 = "./VideoStore/" + qStr + "_01.avi";
 		QString qStrTime2 = "./VideoStore/" + qStr + "_02.avi";
-		//m_CamDriver[0].saveData(qStrTime1);
-		//m_CamDriver[1].saveData(qStrTime2);
-		outputVideo[0].open(qStrTime1.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 20.0, Size(640, 360));
-		outputVideo[1].open(qStrTime2.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 20.0, Size(640, 360));
 
-		//ecg[0]->initData();
-		//ecg[1]->initData();
+		outputVideo[0].open(qStrTime1.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 16.0, Size(640, 360));
+		outputVideo[1].open(qStrTime2.toLatin1().data(), VideoWriter::fourcc('M', 'J', 'P', 'G'), 16.0, Size(640, 360));
+
+		ecg[0]->initData();
+		ecg[1]->initData();
+
+		//计时器
+		recordTime->setHMS(0, 0, 0); //时间设为0
+		ui.recordTime->setVisible(true);
+		recordTimer->start(1000);
 
 		buttonTimer = new QTimer();
 		buttonTimer->start(2000);
@@ -278,14 +487,18 @@ void T_e_s::on_pushButton_begin_clicked()
 
 		videoWriteOpen = false;
 
-		//m_CamDriver[0].stopData();
-		//m_CamDriver[1].stopData();
-
 		outputVideo[0].release();
 		outputVideo[1].release();
 
-		//ecg[0]->stopShow();
-		//ecg[1]->stopShow();
+		ecg[0]->stopShow();
+		ecg[1]->stopShow();
+
+		//计时器
+		qDebug() << recordTime->toString("hh:mm:ss");
+		//ui.recordTime->setVisible(false);
+		recordTimer->stop();
+		
+		ui.recordTime->display(recordTime->toString("hh:mm:ss")); //显示00:00:00
 
 		buttonTimer = new QTimer();
 		buttonTimer->start(1500);
@@ -323,7 +536,7 @@ void T_e_s::HK()
 	//m_CamDriver[1].SetScaleFactor(0.5f);
 
 	HKtimer = new QTimer(this);
-	HKtimer->start(40);
+	HKtimer->start(50);
 	/*
 	m_CamDriver[0].InitHKNetSDK();//
 	m_CamDriver[0].SetScaleFactor(0.5f);
@@ -434,7 +647,7 @@ void T_e_s::changeCombox(Device device)
 			//connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 			HKtimer->stop();
 			HKtimer = new QTimer(this);
-			HKtimer->start(40);
+			HKtimer->start(50);
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 		}
@@ -462,7 +675,7 @@ void T_e_s::on_comboBox_video1_currentIndexChanged(int index)
 			
 			HKtimer->stop();
 			HKtimer = new QTimer(this);
-			HKtimer->start(40);
+			HKtimer->start(50);
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 
@@ -494,7 +707,7 @@ void T_e_s::on_comboBox_video2_currentIndexChanged(int index)
 
 			HKtimer->stop();
 			HKtimer = new QTimer(this);
-			HKtimer->start(40);
+			HKtimer->start(50);
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame1()));
 			connect(HKtimer, SIGNAL(timeout()), this, SLOT(getFrame2()));
 
@@ -637,6 +850,28 @@ void T_e_s::GetDateTime()
 	ui.label_detail_time->setText(qStr);
 }
 
+//计时器
+void T_e_s::initRecordTime()
+{
+
+	recordTimer = new QTimer(this);
+	recordTime = new QTime(0, 0, 0);
+
+	ui.recordTime->setDigitCount(8);
+	ui.recordTime->setSegmentStyle(QLCDNumber::Flat);
+	ui.recordTime->display(recordTime->toString("hh:mm:ss"));
+
+	ui.recordTime->setVisible(false);
+
+	connect(recordTimer, SIGNAL(timeout()), this, SLOT(updateTime()));
+}
+
+void T_e_s::updateTime()
+{
+	*recordTime = recordTime->addSecs(1);
+	ui.recordTime->display(recordTime->toString("hh:mm:ss"));
+}
+
 
 //导航栏选中 跳转页面
 void T_e_s::on_listWidget_enter_clicked()
@@ -675,6 +910,17 @@ void T_e_s::buttonChange(int i)
 	ui.pushButton_begin->setStyleSheet(qssbtn.join(""));
 	
 }
+
+//个人训练
+void T_e_s::TableStyle()
+{
+	
+	ui.tableWidget_per2->setRowCount(8);
+	ui.tableWidget_per2->setStyleSheet("selection-background-color:transparent;selection-color:#000000;alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
+	
+	//ui.tableWidget_per2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
 //设置格式
 void T_e_s::styleSheet()
 {
@@ -721,6 +967,38 @@ void T_e_s::styleSheet()
 		"QPushButton:hover{border-image: url(./Resources/ic_close_bl.png);background-repeat: no-repeat;background-position:center;border:none;}"
 		"QPushButton:pressed{border-image: url(./Resources/ic_close_b.png);background-repeat: no-repeat;background-position:center;border:none;}");
 
+	QStringList qssbtn;//按钮
+	qssbtn.append(QString(
+		"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid #AAAAAA;background:#e1e1e1;color:#777777} "
+		"QPushButton:enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
+		"QPushButton:hover {border-style:none;padding:2px;border-radius:5px;border:2px solid %2;background:%2;color:#FFFFFF}"
+		"QPushButton:pressed{border-style:none;padding:2px;border-radius:5px;border:2px solid %3;background:%3;color:#FFFFFF}"
+	).arg(color1).arg(color2).arg(color3));
+
+	QStringList qss1;//选择
+	qss1.append(QString(("QComboBox{"          //选择框  
+		"border: 2px solid %1;;"
+		"border-radius: 5px;"
+		"padding: 1px 2px 1px 2px;"
+		"min-width: 4em; background:#ffffff;"
+		//	"min-height: 40px;"
+		"}"
+		"QComboBox QAbstractItemView::item {min-height: 25px;}" //下拉选项高度
+		"QComboBox::down-arrow{border-image:url(./Resources/arrow_down_gray.png);}" //下拉箭头
+		"QComboBox::drop-down {"
+		"subcontrol-origin: padding;"
+		"subcontrol-position: top right;"
+		"width: 20px;"
+		"border-left-width: 1px;"
+		"border-left-color: darkgray;"
+		"border-left-style: solid;"
+		"border-top-right-radius: 3px;"
+		"border-bottom-right-radius: 3px;"
+		//	" }"
+		" }"
+		"QComboBox:focus{border: 2px solid #996666;}"
+		)).arg("#555555"));
+
 
 
 	//中间功能界面 
@@ -761,16 +1039,77 @@ void T_e_s::styleSheet()
 		"QScrollBar{ width : 0; height : 0; }"
 	);
 
+	//训练数据管理，个人训练历史
+	ui.stackedWidget_person->setCurrentIndex(0);
+	ui.pushButton_down_per1->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_down_per2->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_up_per1->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_up_per2->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_jump_per1->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_jump_per2->setStyleSheet(qssbtn.join(""));
+	ui.pushButton_back_per2->setStyleSheet(qssbtn.join(""));
+
+	ui.spinBox_per1->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 2px;}"
+		"QSpinBox::up-button{image:url(./Resources/up.png);}"
+		"QSpinBox::down-button{image:url(./Resources/down.png);}");
+	ui.spinBox_per2->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 2px;}"
+		"QSpinBox::up-button{image:url(./Resources/up.png);}"
+		"QSpinBox::down-button{image:url(./Resources/down.png);}");
+	ui.comboBox_per1->setView(new QListView());
+	ui.comboBox_per1->setStyleSheet(qss1.join(""));
+
+	QStringList headerPer;
+	headerPer << "姓名" << tr("5000米长跑") << "100米短跑" << "高抬腿跑" << "俯卧撑" << "仰卧起坐" << "单/双杠"  << "蛇形跑" << "负重深蹲" << "查看";
+	ui.tableWidget_per1->clear();
+	ui.tableWidget_per1->setColumnCount(10);
+	ui.tableWidget_per1->setRowCount(16);
+	ui.tableWidget_per1->setHorizontalHeaderLabels(headerPer);
+	ui.tableWidget_per1->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.tableWidget_per1->setSelectionMode(QAbstractItemView::NoSelection);
+	ui.tableWidget_per1->setAlternatingRowColors(true);
+	ui.tableWidget_per1->setStyleSheet("alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
+	ui.tableWidget_per1->verticalHeader()->setHidden(true);
+	ui.tableWidget_per1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+	//个人训练历史
+	QStringList headerPer2;
+	headerPer2 << "分类" << "训练记录";
+	ui.tableWidget_per2->clear();
+	ui.tableWidget_per2->setColumnCount(2);
+	ui.tableWidget_per2->setColumnWidth(0, 150);
+	ui.tableWidget_per2->setColumnWidth(1, 848);
+	ui.tableWidget_per2->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	ui.tableWidget_per2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	ui.tableWidget_per2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.tableWidget_per2->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.tableWidget_per2->setAlternatingRowColors(true);
+	ui.tableWidget_per2->verticalHeader()->setHidden(true);
+	ui.tableWidget_per2->setHorizontalHeaderLabels(headerPer2);
+
+	////个人训练历史
+	//QStringList headerPer2;
+	//headerPer2 << "分类" << "训练记录";
+	//ui.tableWidget_per2->clear();
+	//ui.tableWidget_per2->setColumnCount(2);
+	//ui.tableWidget_per2->setRowCount(8);
+	//ui.tableWidget_per2->setColumnWidth(0, 150);
+	//ui.tableWidget_per2->setColumnWidth(1, 848);
+	////ui.tableWidget_per2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	////ui.tableWidget_per2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	//ui.tableWidget_per2->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	//ui.tableWidget_per2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	//ui.tableWidget_per2->setHorizontalHeaderLabels(headerPer2);
+	//ui.tableWidget_per2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	//ui.tableWidget_per2->setSelectionMode(QAbstractItemView::NoSelection);
+	//ui.tableWidget_per2->setAlternatingRowColors(true);
+	//ui.tableWidget_per2->setStyleSheet("alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
+	//ui.tableWidget_per2->verticalHeader()->setHidden(true);
+	////ui.tableWidget_per2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+
+	
+	
 	//第三页
-	QStringList qssbtn;//按钮
-	qssbtn.append(QString(
-		"QPushButton:!enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid #AAAAAA;background:#e1e1e1;color:#777777} "
-		"QPushButton:enabled {border-style:none;padding:2px;border-radius:5px;border:2px solid %1;background:%1;color:#FFFFFF} "
-		"QPushButton:hover {border-style:none;padding:2px;border-radius:5px;border:2px solid %2;background:%2;color:#FFFFFF}"
-		"QPushButton:pressed{border-style:none;padding:2px;border-radius:5px;border:2px solid %3;background:%3;color:#FFFFFF}"
-	).arg(color1).arg(color2).arg(color3));
-
-
 	ui.tabWidget_2->setTabPosition(QTabWidget::West);
 	ui.tabWidget_2->tabBar()->setStyle(new CustomTabStyle);
 	ui.tabWidget_2->setStyleSheet("QTabWidget::tab-bar{top:0px; }"
@@ -792,7 +1131,7 @@ void T_e_s::styleSheet()
 	ui.tableWidget_addDevice->setRowCount(14);
 
 	QStringList header;
-	header << "编号" << tr("设备名") << "IP地址" << "端口号" << "用户名" << "密码";
+	header << "编号" << tr("设备名") << "IP地址" << "端口号" << "账号" << "分辨率";
 	ui.tableWidget_addDevice->clear();
 	ui.tableWidget_addDevice->setHorizontalHeaderLabels(header);
 	ui.tableWidget_addDevice->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -814,35 +1153,17 @@ void T_e_s::styleSheet()
 	ui.tableWidget_addEcg->verticalHeader()->setHidden(true);
 	ui.tableWidget_addEcg->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-	ui.spinBox_addDevice->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 1px;}");
-	ui.spinBox_addEcg->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 1px;}");
+	ui.spinBox_addDevice->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 2px;}"
+		"QSpinBox::up-button{image:url(./Resources/up.png);}"
+		"QSpinBox::down-button{image:url(./Resources/down.png);}");
+	ui.spinBox_addEcg->setStyleSheet("QSpinBox{border: 0px solid #4182C3;border-width: 2px;}"
+	    "QSpinBox::up-button{image:url(./Resources/up.png);}"
+	    "QSpinBox::down-button{image:url(./Resources/down.png);}");
 
 	//第四页 评估
 	ui.label_4_title->setStyleSheet(QString("color: %1").arg(color1));
 
-	QStringList qss1;//选择
-	qss1.append(QString(("QComboBox{"          //选择框  
-		" border: 2px solid %1;;"
-		" border-radius: 5px;"
-		"padding: 1px 2px 1px 2px;"
-		" min-width: 4em; "
-	//	"min-height: 40px;"
-		"}"
-		"QComboBox QAbstractItemView::item {min-height: 25px;}" //下拉选项高度
-		"QComboBox::down-arrow{border-image:url(./Resources/arrow_down_gray.png);}" //下拉箭头
-		"QComboBox::drop-down {"
-		"subcontrol-origin: padding;"
-		" subcontrol-position: top right;"
-		" width: 20px;"
-		" border-left-width: 1px;"
-		"border-left-color: darkgray;"
-		"border-left-style: solid;"
-		"border-top-right-radius: 3px;"
-		" border-bottom-right-radius: 3px;"
-	//	" }"
-		" }"
-		"QComboBox:focus{border: 2px solid #996666;}"
-		)).arg("#555555"));
+
 	ui.comboBox_video1->setView(new QListView());
 	ui.comboBox_video1->setStyleSheet(qss1.join(""));
 	ui.comboBox_video2->setView(new QListView());

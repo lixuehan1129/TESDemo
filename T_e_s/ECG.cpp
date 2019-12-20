@@ -1,5 +1,7 @@
 #include "ECG.h"
 
+
+//ÄÃÀ´Ö÷Òå
 ECG::ECG(QWidget *parent) :
 	QWidget(parent)
 {

@@ -76,6 +76,24 @@
     <ClCompile Include="AddPerson.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Replay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MySlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StarEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddStar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="T_e_s.h">
@@ -93,6 +111,15 @@
     <QtMoc Include="AddPerson.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Replay.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="StarEvent.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddStar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="T_e_s.ui">
@@ -105,6 +132,15 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="AddPerson.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Replay.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="StarEvent.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AddStar.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -138,6 +174,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MySlider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

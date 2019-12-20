@@ -17,11 +17,11 @@
 #include "DBHelper.h"
 #include "direct.h"
 #include "io.h"
+#include "Replay.h"
 
 using namespace std;
 
 #define MAX_ECG 4
-
 
 class T_e_s : public QMainWindow
 {
@@ -65,8 +65,23 @@ private slots:
 
 	void buttonEn();
 
+	void GoTrainDetail();
+	void on_pushButton_back_per2_clicked();
+
 	void getDeviceData(Device device);
+
+	//计时器
+	void updateTime();
+
+	//折线图
+	void updateGetChart();
+	void slotPointHoverd(const QPointF &point, bool state);
+	void slotPointClicked(const QPointF &point);
 	
+signals:
+	void updateChart();
+
+	void replayGo(int pro, int x, int y);
 
 private:
 	Ui::T_e_sClass ui;
@@ -111,6 +126,19 @@ private:
 
 	//摄像头下拉框开启
 	bool comboxOpen = false;
+
+	//计时器
+	QTimer* recordTimer;
+	QTime* recordTime;
+	void initRecordTime();
+
+	//第二页第二部分
+	void initTrain();
+	//折线图
+	QTimer* chartTimer;
+	void initChart(int i);
+	QChart* createLineChart() const;
+	void TableStyle();
 
 	
 

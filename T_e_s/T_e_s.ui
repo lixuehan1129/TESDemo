@@ -397,7 +397,7 @@
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page_one">
       <widget class="QLabel" name="label_2">
@@ -891,7 +891,7 @@
         <enum>QTabWidget::West</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab_person">
         <property name="font">
@@ -934,20 +934,322 @@
        </widget>
        <widget class="QWidget" name="tab_phy">
         <attribute name="title">
-         <string>体能评估记录</string>
+         <string>训练评估记录</string>
         </attribute>
-        <widget class="QLabel" name="label_21">
+        <widget class="QWidget" name="widget_2" native="true">
          <property name="geometry">
           <rect>
-           <x>430</x>
-           <y>140</y>
-           <width>101</width>
-           <height>71</height>
+           <x>0</x>
+           <y>0</y>
+           <width>1060</width>
+           <height>608</height>
           </rect>
          </property>
-         <property name="text">
-          <string>暂无数据</string>
-         </property>
+         <widget class="QStackedWidget" name="stackedWidget_person">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1060</width>
+            <height>608</height>
+           </rect>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="page_per1">
+           <widget class="QComboBox" name="comboBox_per1">
+            <property name="geometry">
+             <rect>
+              <x>860</x>
+              <y>25</y>
+              <width>165</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>黑体</family>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_21">
+            <property name="geometry">
+             <rect>
+              <x>400</x>
+              <y>10</y>
+              <width>260</width>
+              <height>40</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>18</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>人员训练清单</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+           <widget class="QSpinBox" name="spinBox_per1">
+            <property name="geometry">
+             <rect>
+              <x>550</x>
+              <y>575</y>
+              <width>50</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-color: rgb(65, 130, 195);</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_jump_per1">
+            <property name="geometry">
+             <rect>
+              <x>660</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>跳转</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_down_per1">
+            <property name="geometry">
+             <rect>
+              <x>380</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>下一页</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_up_per1">
+            <property name="geometry">
+             <rect>
+              <x>240</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>上一页</string>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tableWidget_per1">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>60</y>
+              <width>1000</width>
+              <height>510</height>
+             </rect>
+            </property>
+           </widget>
+           <zorder>label_21</zorder>
+           <zorder>spinBox_per1</zorder>
+           <zorder>pushButton_jump_per1</zorder>
+           <zorder>pushButton_down_per1</zorder>
+           <zorder>pushButton_up_per1</zorder>
+           <zorder>tableWidget_per1</zorder>
+           <zorder>comboBox_per1</zorder>
+          </widget>
+          <widget class="QWidget" name="page_per2">
+           <widget class="QPushButton" name="pushButton_jump_per2">
+            <property name="geometry">
+             <rect>
+              <x>660</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>跳转</string>
+            </property>
+           </widget>
+           <widget class="QSpinBox" name="spinBox_per2">
+            <property name="geometry">
+             <rect>
+              <x>550</x>
+              <y>575</y>
+              <width>50</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-color: rgb(65, 130, 195);</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tableWidget_per2">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>60</y>
+              <width>1000</width>
+              <height>510</height>
+             </rect>
+            </property>
+            <property name="rowCount">
+             <number>0</number>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_up_per2">
+            <property name="geometry">
+             <rect>
+              <x>240</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>上一页</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_27">
+            <property name="geometry">
+             <rect>
+              <x>400</x>
+              <y>10</y>
+              <width>260</width>
+              <height>40</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>18</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>个人训练历史</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_down_per2">
+            <property name="geometry">
+             <rect>
+              <x>380</x>
+              <y>575</y>
+              <width>100</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>下一页</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_back_per2">
+            <property name="geometry">
+             <rect>
+              <x>968</x>
+              <y>20</y>
+              <width>50</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>返回</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_name_per2">
+            <property name="geometry">
+             <rect>
+              <x>35</x>
+              <y>30</y>
+              <width>70</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </widget>
+         </widget>
         </widget>
        </widget>
        <widget class="QWidget" name="tab_res">
@@ -1545,6 +1847,24 @@
          <string/>
         </property>
        </widget>
+       <widget class="QLCDNumber" name="recordTime">
+        <property name="geometry">
+         <rect>
+          <x>35</x>
+          <y>555</y>
+          <width>105</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:transparent</string>
+        </property>
+       </widget>
        <zorder>label_4_left</zorder>
        <zorder>label_4_title</zorder>
        <zorder>pushButton_begin</zorder>
@@ -1555,6 +1875,7 @@
        <zorder>label_18</zorder>
        <zorder>label_19</zorder>
        <zorder>listWidget_test_staff</zorder>
+       <zorder>recordTime</zorder>
       </widget>
       <widget class="QListWidget" name="listWidget_xinlv">
        <property name="geometry">
