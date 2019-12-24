@@ -27,7 +27,7 @@ private slots:
 	//void on_radioButton_woman_toggled();
 
 signals:
-	//void SendData(Device device);
+	void SendData(Person person);
 private:
 	Ui::AddPerson ui;
 	Person person;

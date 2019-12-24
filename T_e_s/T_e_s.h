@@ -77,6 +77,8 @@ private slots:
 	void updateGetChart();
 	void slotPointHoverd(const QPointF &point, bool state);
 	void slotPointClicked(const QPointF &point);
+
+	void getPerson(Person person);
 	
 signals:
 	void updateChart();
@@ -139,6 +141,11 @@ private:
 	void initChart(int i);
 	QChart* createLineChart() const;
 	void TableStyle();
+
+	//人员数据
+	
+	QList<Person> persons;
+	
 
 	
 

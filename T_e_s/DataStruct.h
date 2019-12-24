@@ -23,6 +23,7 @@ typedef struct {
 	int personWeight;
 	int personHeight;
 	QString personBand;
+	QString personPic;
 }Person;
 
 Q_DECLARE_METATYPE(Person)

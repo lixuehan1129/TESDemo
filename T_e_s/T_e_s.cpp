@@ -101,7 +101,7 @@ void T_e_s::initStatus()
 	//第二页
 	//定义人员管理数据
 	addListPerson();
-	addListPerson();
+//	addListPerson();
 
 	initTrain();
 
@@ -184,6 +184,56 @@ void T_e_s::PersonEvent()
 	addPerson->setWindowFlags(Qt::WindowStaysOnTopHint);
 
 	addPerson->show();
+
+	connect(addPerson, SIGNAL(SendData(Person)), this, SLOT(getPerson(Person)));
+
+}
+
+void T_e_s::getPerson(Person person)
+{
+	persons << person;
+	PersonBody *personBody = new PersonBody(this);
+	PersonBodyBean *personBodyBean = new PersonBodyBean();
+	personBodyBean->personHead = "./Resources/head.png";
+	personBodyBean->personName = person.personName;
+	personBodyBean->personSex = person.personSex == 0 ? "男" : "女";
+	personBodyBean->personAge = QString::number(person.personAge);
+	personBodyBean->personWeight = QString::number(person.personWeight) + " Kg";
+	personBodyBean->personHeight = QString::number(person.personHeight) + " cm";
+	personBodyBean->personStatus = "训练中，以能者为师，每一个训练项目都在班长的带领下选一个相对较熟练的人员负责指导训练，全体人员发扬不怕苦、不怕累的作风，克服工作多、训练时间少的困难。";
+	personBody->setData(personBodyBean);
+
+	QListWidgetItem *newItem = new QListWidgetItem(ui.listWidget_personBody);
+	newItem->setSizeHint(personBody->size());
+	//newItem->setText("dfd");
+	ui.listWidget_personBody->addItem(newItem);
+
+	ui.listWidget_personBody->setItemWidget(newItem, personBody);
+}
+
+void T_e_s::addListPerson() {
+	persons = dBHelper.getPerson();
+	for (int i = 0; i < persons.size(); i++)
+	{
+		PersonBody *personBody = new PersonBody(this);
+		PersonBodyBean *personBodyBean = new PersonBodyBean();
+		personBodyBean->personHead = "./Resources/head.png";
+		personBodyBean->personName = persons.at(i).personName;
+		personBodyBean->personSex = persons.at(i).personSex == 0 ? "男" : "女";
+		personBodyBean->personAge = QString::number(persons.at(i).personAge);
+		personBodyBean->personWeight = QString::number(persons.at(i).personWeight) + " Kg";
+		personBodyBean->personHeight = QString::number(persons.at(i).personHeight) + " cm";
+		personBodyBean->personStatus = "训练中，以能者为师，每一个训练项目都在班长的带领下选一个相对较熟练的人员负责指导训练，全体人员发扬不怕苦、不怕累的作风，克服工作多、训练时间少的困难。";
+		personBody->setData(personBodyBean);
+
+		QListWidgetItem *newItem = new QListWidgetItem(ui.listWidget_personBody);
+		newItem->setSizeHint(personBody->size());
+		//newItem->setText("dfd");
+		ui.listWidget_personBody->addItem(newItem);
+
+		ui.listWidget_personBody->setItemWidget(newItem, personBody);
+	}
+
 
 }
 
@@ -798,26 +848,7 @@ void T_e_s::EcgSet(int item)
 }
 
 
-void T_e_s::addListPerson() {
-	PersonBody *personBody = new PersonBody(this);
-	PersonBodyBean *personBodyBean = new PersonBodyBean();
-	personBodyBean->personHead = "./Resources/head.png";
-	personBodyBean->personName = "李学翰";
-	personBodyBean->personSex = "男";
-	personBodyBean->personAge = "18";
-	personBodyBean->personWeight = "65Kg";
-	personBodyBean->personHeight = "170cm";
-	personBodyBean->personStatus = "训练中，以能者为师，每一个训练项目都在班长的带领下选一个相对较熟练的人员负责指导训练，全体人员发扬不怕苦、不怕累的作风，克服工作多、训练时间少的困难。";
-	personBody->setData(personBodyBean);
 
-	QListWidgetItem *newItem = new QListWidgetItem(ui.listWidget_personBody);
-	newItem->setSizeHint(personBody->size());
-	//newItem->setText("dfd");
-	ui.listWidget_personBody->addItem(newItem);
-
-	ui.listWidget_personBody->setItemWidget(newItem,personBody);
-
-}
 
 //最小化
 void T_e_s::on_pushButton_min_clicked()
@@ -1085,28 +1116,6 @@ void T_e_s::styleSheet()
 	ui.tableWidget_per2->setAlternatingRowColors(true);
 	ui.tableWidget_per2->verticalHeader()->setHidden(true);
 	ui.tableWidget_per2->setHorizontalHeaderLabels(headerPer2);
-
-	////个人训练历史
-	//QStringList headerPer2;
-	//headerPer2 << "分类" << "训练记录";
-	//ui.tableWidget_per2->clear();
-	//ui.tableWidget_per2->setColumnCount(2);
-	//ui.tableWidget_per2->setRowCount(8);
-	//ui.tableWidget_per2->setColumnWidth(0, 150);
-	//ui.tableWidget_per2->setColumnWidth(1, 848);
-	////ui.tableWidget_per2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	////ui.tableWidget_per2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-	//ui.tableWidget_per2->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-	//ui.tableWidget_per2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	//ui.tableWidget_per2->setHorizontalHeaderLabels(headerPer2);
-	//ui.tableWidget_per2->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	//ui.tableWidget_per2->setSelectionMode(QAbstractItemView::NoSelection);
-	//ui.tableWidget_per2->setAlternatingRowColors(true);
-	//ui.tableWidget_per2->setStyleSheet("alternate-background-color:#FFFAF0;background:#B4EEB4;gridline-color:white");
-	//ui.tableWidget_per2->verticalHeader()->setHidden(true);
-	////ui.tableWidget_per2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
 	
 	
 	//第三页

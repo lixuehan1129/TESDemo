@@ -32,12 +32,12 @@ void AddPerson::on_radioButton_man_toggled()
 	if (ui.radioButton_man->isChecked())
 	{
 		personSex = 0;
-		qDebug() << personSex;
+		//qDebug() << personSex;
 	}
 	else
 	{
 		personSex = 1;
-		qDebug() << personSex;
+		//qDebug() << personSex;
 	}
 
 }
@@ -52,6 +52,26 @@ void AddPerson::on_pushButton_sure_clicked()
 	person.personWeight = ui.lineEdit_personWeight->text().toInt();
 	person.personHeight = ui.lineEdit_personHeight->text().toInt();
 	person.personBand = ui.comboBox_ecg->currentText();
+	person.personBand = "暂无设备";
+	person.personPic = "";
+
+	//qDebug() << person.personAge;
+	if (person.personName.isEmpty() || person.personAge == 0 || person.personWeight == 0 || person.personHeight == 0)
+	{
+		QMessageBox::warning(this, tr("提示"), QString(tr("存在未输入信息")), QMessageBox::Yes);
+	}
+	else
+	{
+		if (dBHelper.insertPerson(person))
+		{
+			this->close();
+			emit SendData(person);
+		}
+		else
+		{
+			QMessageBox::warning(this, tr("提示"), QString(tr("数据已存在")), QMessageBox::Yes);
+		}
+	}
 }
 
 void AddPerson::on_pushButton_cancel_clicked()

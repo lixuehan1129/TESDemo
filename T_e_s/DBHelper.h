@@ -28,6 +28,8 @@ public:
 	bool insertDevice(Device device); //插入摄像设备数据
 
 	QList<Device> getDevice();
+	bool insertPerson(Person person);
+	QList<Person> getPerson();
 
 	//获取人员ID
 	int getPersonCount();
